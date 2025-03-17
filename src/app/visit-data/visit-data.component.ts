@@ -46,6 +46,7 @@ export class VisitDataComponent implements OnInit {
 
   onVolCalcClick(row: VisitData): void {
     console.log('Vol Calc clicked:', row);
+    this.router.navigate(['/volume-calculation'], { state: { data: row } });
   }
 
   onSMITClick(row: VisitData): void {
