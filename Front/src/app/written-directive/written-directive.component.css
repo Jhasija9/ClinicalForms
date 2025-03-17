@@ -40,7 +40,7 @@
   width: 100%;
 }
 .section-header {
-    background: #f0f0f0;
+border-bottom: 1px solid;
     padding: 5px;
     margin: -15px -15px 15px -15px;
     font-weight: bold;
@@ -199,20 +199,34 @@
   /* Additional spacing fixes */
   .form-row input[type="date"],
   .form-row input[type="time"] {
-    margin: 0 5px;
   }
   
   .form-row span + input {
-    margin-left: 5px;
   }
-  
+  .form-row input[type="checkbox"] {
+    height: 12px;
+  }
   /* Ensure inputs don't overflow their containers */
   .section {
     overflow: hidden;
+    border: none !important;
+    outline: none !important;
+    background: transparent !important;
   }
   
   /* Ensure consistent height for all inputs */
   input {
     height: 30px;
     box-sizing: border-box;
+    font-family: Arial, sans-serif;
   }
+
+  @media print {
+    input {
+      border: none !important;
+      outline: none !important;
+      background: transparent !important;
+    }
+
+  }
+  

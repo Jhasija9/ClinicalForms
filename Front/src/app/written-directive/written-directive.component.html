@@ -1,4 +1,7 @@
 <div class="wd-container">
+  <div id="pdfContent">
+
+    <!-- Header Section -->
     <div class="header">
       <img src="assets/images/logo.png" alt="United Theranostics">
       <h1>Written Directive</h1>
@@ -8,48 +11,58 @@
         <p>V.1.1 (11 Feb 2025)</p>
       </div>
     </div>
-  
+
+    <!-- Form Section -->
     <form [formGroup]="wdForm" id="wdForm">
-      <!-- Section 1 -->
+      <!-- Section 1: Patient Identification -->
       <div class="section">
         <div class="section-header">1. PATIENT IDENTIFICATION</div>
-        <div class="form-row">
-          <label>Patient Name:</label>
-          <input formControlName="patientName">
-        </div>
-        <div class="form-row">
-          <label>Subject ID:</label>
-          <input formControlName="subjectId">
-        </div>
-        <div class="form-row">
-          <label>DOB:</label>
-          <input formControlName="dob" type="date">
-        </div>
-        <div class="form-row">
-          <label>Protocol #: Version 2.0 (19DEC2024)</label>
-        </div>
-        <div class="arms">
-          <div>
-            <input type="checkbox" formControlName="arm1"> Arm 1: 50 kBq/kg
+
+        <!-- Two-Column Layout -->
+        <div class="form-row-container" style="display: flex
+        ;
+            justify-content: space-between;">
+          <div class="form-left">
+            <div class="form-row">
+              <label>Patient Name:</label>
+              <input formControlName="patientName">
+            </div>
+            <div class="form-row">
+              <label>Subject ID:</label>
+              <input formControlName="subjectId">
+            </div>
+            <div class="form-row">
+              <label>DOB:</label>
+              <input formControlName="dob" type="date">
+            </div>
           </div>
-          <div>
-            <input type="checkbox" formControlName="arm2"> Arm 2: 75 kBq/kg
+
+          <div class="form-right">
+            <div class="form-row">
+              <label>Protocol #:</label>
+              <span>Version 2.0 (19DEC2024)</span>
+            </div>
+            <div class="form-row">
+              <label>Arms:</label>
+              <div class="arms">
+                <div><input type="checkbox" formControlName="arm1"> Arm 1: 50 kBq/kg</div>
+                <div><input type="checkbox" formControlName="arm2"> Arm 2: 75 kBq/kg</div>
+                <div><input type="checkbox" formControlName="arm3"> Arm 3: 100 kBq/kg</div>
+              </div>
+            </div>
+            <div class="form-row">
+              <label>Screening weight:</label>
+              <input formControlName="screeningWeight" type="number"> kg
+            </div>
+            <div class="form-row">
+              <label>Assigned dose:</label>
+              <input formControlName="assignedDose" type="number"> kBq (1/37 →) μCi
+            </div>
           </div>
-          <div>
-            <input type="checkbox" formControlName="arm3"> Arm 3: 100 kBq/kg
-          </div>
-        </div>
-        <div class="form-row">
-          <label>Screening weight:</label>
-          <input formControlName="screeningWeight" type="number"> kg
-        </div>
-        <div class="form-row">
-          <label>Assigned dose:</label>
-          <input formControlName="assignedDose" type="number"> kBq (1/37 ->) μCi
         </div>
       </div>
-  
-      <!-- Section 2 -->
+
+      <!-- Section 2: Dose Ordering -->
       <div class="section">
         <div class="section-header">2. DOSE ORDERING</div>
         <div class="form-row">
@@ -57,22 +70,25 @@
           <span>[Ac-225]-FPI-2265 (Fusion)</span>
         </div>
         <div class="form-row">
+
+        </div>
+        <div class="form-row compact">
           <label>2. Prescribed Dosage:</label>
           <input formControlName="prescribedDosage" type="number"> kBq
           <input formControlName="prescribedDosageUci" type="number"> μCi
+          <span class="time-label">Treatment #:</span>
+          <input type="number" formControlName="adminTime" class="time-input">
         </div>
         <div class="form-row">
           <label>3. Route of Administration:</label>
           <span>IV</span>
         </div>
         <div class="form-row compact">
-            <label>4. Proposed Administration Date:</label>
-            <input type="date" formControlName="adminDate" class="date-input">
-            <span class="time-label">Time:</span>
-            <input type="time" formControlName="adminTime" class="time-input">
-          </div>
-
-          
+          <label>4. Proposed Administration Date:</label>
+          <input type="date" formControlName="adminDate" class="date-input">
+          <span class="time-label">Time:</span>
+          <input type="time" formControlName="adminTime" class="time-input">
+        </div>
         <div class="form-row">
           <label>5. Authorized User:</label>
           <!-- <span>Dr. Michael Morris</span> -->
@@ -86,9 +102,9 @@
             <span class="time-label">Time:</span>
             <input type="time" formControlName="signatureTime" class="time-input">
           </div>
-        </div>
-  
-      <!-- Section 3 -->
+      </div>
+
+      <!-- Section 3: IMP Receipt & Inventory -->
       <div class="section">
         <div class="section-header">3. IMP RECEIPT & INVENTORY</div>
         <div class="form-row">
@@ -110,8 +126,8 @@
           <input formControlName="volume" type="number"> mL
         </div>
       </div>
-  
-      <!-- Section 4 -->
+
+      <!-- Section 4: Dose Dispensing -->
       <div class="section">
         <div class="section-header">4. DOSE DISPENSING</div>
         <div class="form-row">
@@ -123,8 +139,8 @@
           <input formControlName="syringeVolume" type="number"> mL
         </div>
       </div>
-  
-      <!-- Section 5 -->
+
+      <!-- Section 5: Dose Administration -->
       <div class="section">
         <div class="section-header">5. DOSE ADMINISTRATION</div>
         <div class="safety-checks">
@@ -169,7 +185,13 @@
           <input formControlName="endTime" type="time">
         </div>
       </div>
-  
-      <button (click)="generatePDF()">Generate PDF</button>
     </form>
   </div>
+
+  <!-- Excluded from PDF -->
+  <button (click)="generatePDF()">Generate PDF</button>
+</div>
+
+
+
+
