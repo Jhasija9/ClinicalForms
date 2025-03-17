@@ -93,11 +93,17 @@ export class VolumeCalculationComponent implements OnInit {
         next: (data) => {
           console.log('Combined Data:', data); // To see the data structure
           
+          
           const formRecord = data.formData.find((record: any) => 
             record.id === this.rowData.id
           );
           
           if (formRecord) {
+            const formatDate = (dateString: string) => {
+              if (!dateString) return '';
+              const date = new Date(dateString);
+              return date.toISOString().split('T')[0];  // Returns YYYY-MM-DD
+            };
             // Extract cycle and day from visit_name
             const visitMatch = formRecord.visit_name?.toLowerCase().match(/cycle\s*(\d+)\s*day\s*(\d+)/i);
           
@@ -117,7 +123,7 @@ export class VolumeCalculationComponent implements OnInit {
               subjectId: formRecord.patient_id,
               cycle: cycle,  // Format as "Cycle 1"
               studyWeek: studyWeek || '',         
-              dateOfService: formRecord.visit_date,
+              dateOfService: formatDate(formRecord.start),
               screeningWeight: formRecord.screening_weight,
               weightDayOfDose: formRecord.current_weight,
               // Calculate weight difference percentage
