@@ -1,0 +1,165 @@
+<div class="wd-container">
+    <div class="header">
+      <img src="assets/images/logo.png" alt="United Theranostics">
+      <h1>Written Directive</h1>
+      <div class="form-info">
+        <p>FPI-2265-202</p>
+        <p>Site: Chesapeake</p>
+        <p>V.1.1 (11 Feb 2025)</p>
+      </div>
+    </div>
+  
+    <form [formGroup]="wdForm" id="wdForm">
+      <!-- Section 1 -->
+      <div class="section">
+        <h2>1. PATIENT IDENTIFICATION</h2>
+        <div class="form-row">
+          <label>Patient Name:</label>
+          <input formControlName="patientName">
+        </div>
+        <div class="form-row">
+          <label>Subject ID: 2265M-120-</label>
+          <input formControlName="subjectId">
+        </div>
+        <div class="form-row">
+          <label>DOB:</label>
+          <input formControlName="dob" type="date">
+        </div>
+        <div class="form-row">
+          <label>Protocol #: Version 2.0 (19DEC2024)</label>
+        </div>
+        <div class="arms">
+          <div>
+            <input type="checkbox" formControlName="arm1"> Arm 1: 50 kBq/kg
+          </div>
+          <div>
+            <input type="checkbox" formControlName="arm2"> Arm 2: 75 kBq/kg
+          </div>
+          <div>
+            <input type="checkbox" formControlName="arm3"> Arm 3: 100 kBq/kg
+          </div>
+        </div>
+        <div class="form-row">
+          <label>Screening weight:</label>
+          <input formControlName="screeningWeight" type="number"> kg
+        </div>
+        <div class="form-row">
+          <label>Assigned dose:</label>
+          <input formControlName="assignedDose" type="number"> kBq (1/37 ->) μCi
+        </div>
+      </div>
+  
+      <!-- Section 2 -->
+      <div class="section">
+        <h2>2. DOSE ORDERING</h2>
+        <div class="form-row">
+          <label>1. Radiopharmaceutical:</label>
+          <span>[Ac-225]-FPI-2265 (Fusion)</span>
+        </div>
+        <div class="form-row">
+          <label>2. Prescribed Dosage:</label>
+          <input formControlName="prescribedDosage" type="number"> kBq
+          <input formControlName="prescribedDosageUci" type="number"> μCi
+        </div>
+        <div class="form-row">
+          <label>3. Route of Administration:</label>
+          <span>IV</span>
+        </div>
+        <div class="form-row compact">
+            <label>4. Proposed Administration Date:</label>
+            <input type="date" formControlName="adminDate" class="date-input">
+            <span class="time-label">Time:</span>
+            <input type="time" formControlName="adminTime" class="time-input">
+          </div>
+
+          
+        <div class="form-row">
+          <label>5. Authorized User:</label>
+          <!-- <span>Dr. Michael Morris</span> -->
+        </div>
+        
+        <div class="form-row compact">
+            <label>6. Authorized User signature:</label>
+            <input formControlName="authUserSignature" class="signature-input">
+            <span class="time-label">Date:</span>
+            <input type="date" formControlName="signatureDate" class="date-input">
+            <span class="time-label">Time:</span>
+            <input type="time" formControlName="signatureTime" class="time-input">
+          </div>
+        </div>
+  
+      <!-- Section 3 -->
+      <div class="section">
+        <h2>3. IMP RECEIPT & INVENTORY</h2>
+        <div class="form-row">
+          <label>Manufacturer:</label>
+          <input formControlName="manufacturer">
+        </div>
+        <div class="form-row">
+          <label>Container ID (RX #):</label>
+          <input formControlName="containerId">
+        </div>
+        <div class="form-row">
+          <label>Lot/Batch #:</label>
+          <input formControlName="lotBatch">
+        </div>
+        <div class="form-row">
+          <label>Form:</label>
+          <input type="checkbox" checked disabled> Liquid
+          <label>Volume:</label>
+          <input formControlName="volume" type="number"> mL
+        </div>
+      </div>
+  
+      <!-- Section 4 -->
+      <div class="section">
+        <h2>4. DOSE DISPENSING</h2>
+        <div class="form-row">
+          <label>Syringe ID:</label>
+          <input formControlName="syringeId">
+        </div>
+        <div class="form-row">
+          <label>Volume:</label>
+          <input formControlName="syringeVolume" type="number"> mL
+        </div>
+      </div>
+  
+      <!-- Section 5 -->
+      <div class="section">
+        <h2>5. DOSE ADMINISTRATION</h2>
+        <div class="safety-checks">
+          <div>
+            <input type="checkbox" formControlName="informedConsent"> Informed Consent
+            <input type="checkbox" formControlName="safetyChecklist"> Safety Checklist by Physician
+            <input type="checkbox" formControlName="timeOut"> Time-Out
+          </div>
+        </div>
+        <div class="form-row">
+          <label>Route of Administration:</label>
+          <span>IV</span>
+        </div>
+        <div class="anatomical-location">
+          <label>Anatomical Location:</label>
+          <input type="checkbox" formControlName="rightPICC"> Right PICC
+          <input type="checkbox" formControlName="leftPICC"> Left PICC
+          <input type="checkbox" formControlName="chemoPort"> Chemo Port
+          <input type="checkbox" formControlName="other"> Other:
+          <input formControlName="otherLocation">
+        </div>
+        <div class="form-row">
+          <label>Start Date:</label>
+          <input formControlName="startDate" type="date">
+        </div>
+        <div class="form-row">
+          <label>Start Time:</label>
+          <input formControlName="startTime" type="time">
+        </div>
+        <div class="form-row">
+          <label>End Time:</label>
+          <input formControlName="endTime" type="time">
+        </div>
+      </div>
+  
+      <button (click)="generatePDF()">Generate PDF</button>
+    </form>
+  </div>

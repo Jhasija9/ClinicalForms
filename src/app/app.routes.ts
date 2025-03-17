@@ -1,0 +1,9 @@
+import { Routes } from '@angular/router';
+import { VisitDataComponent } from './visit-data/visit-data.component';
+import { WrittenDirectiveComponent } from './written-directive/written-directive.component';
+
+export const routes: Routes = [
+  { path: 'visit-data', component: VisitDataComponent },
+  { path: '', redirectTo: '/visit-data', pathMatch: 'full' },
+  { path: 'written-directive', component: WrittenDirectiveComponent }
+];

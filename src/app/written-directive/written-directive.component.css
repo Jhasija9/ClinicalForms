@@ -1,0 +1,190 @@
+.wd-container {
+    padding: 20px;
+    max-width: 850px;
+    margin: 0 auto;
+    font-family: Arial, sans-serif;
+    background: white;
+  }
+  
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+  }
+  
+  .header img {
+    height: 60px;
+  }
+  
+  .header h1 {
+    font-size: 24px;
+    margin: 0;
+  }
+  
+  .form-info {
+    text-align: right;
+  }
+  
+  .form-info p {
+    margin: 5px 0;
+  }
+  
+  .section {
+    border: 1px solid #000;
+    padding: 15px;
+    margin-bottom: 20px;
+  }
+  
+  h2 {
+    background-color: #ccc;
+    padding: 5px 10px;
+    margin: -15px -15px 15px -15px;
+    font-size: 16px;
+    font-weight: bold;
+  }
+  
+  .form-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    gap: 10px;
+  }
+  
+  .form-row.compact {
+    flex-wrap: nowrap;
+    gap: 5px;
+  }
+  
+  .form-row label {
+    min-width: 150px;
+    font-weight: normal;
+  }
+  
+  .form-row.compact label {
+    min-width: 120px;
+    margin-right: 5px;
+  }
+  
+  .time-label {
+    margin: 0 5px;
+    white-space: nowrap;
+  }
+  
+  input[type="text"],
+  input[type="number"] {
+    padding: 5px;
+    border: 1px solid #ccc;
+    width: 150px;
+  }
+  
+  .date-input {
+    width: 130px;
+    padding: 5px;
+    border: 1px solid #ccc;
+  }
+  
+  .time-input {
+    width: 100px;
+    padding: 5px;
+    border: 1px solid #ccc;
+  }
+  
+  .signature-input {
+    width: 150px;
+    padding: 5px;
+    border: 1px solid #ccc;
+  }
+  
+  input[type="checkbox"] {
+    margin-right: 5px;
+  }
+  
+  .arms {
+    margin: 15px 0;
+  }
+  
+  .arms div {
+    margin-bottom: 5px;
+  }
+  
+  .safety-checks {
+    margin: 15px 0;
+  }
+  
+  .safety-checks div {
+    display: flex;
+    gap: 20px;
+  }
+  
+  .anatomical-location {
+    margin: 15px 0;
+    display: flex;
+    gap: 15px;
+    align-items: center;
+  }
+  
+  button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  button:hover {
+    background-color: #0056b3;
+  }
+  
+  span {
+    font-weight: normal;
+  }
+  
+  /* Specific styles for dose ordering section */
+  .dose-ordering .form-row {
+    align-items: center;
+    flex-wrap: nowrap;
+  }
+  
+  .dose-ordering .form-row input {
+    margin: 0 5px;
+  }
+  
+  /* Print styles */
+  @media print {
+    .wd-container {
+      padding: 0;
+      max-width: none;
+    }
+  
+    button {
+      display: none;
+    }
+  
+    .section {
+      page-break-inside: avoid;
+    }
+  }
+  
+  /* Additional spacing fixes */
+  .form-row input[type="date"],
+  .form-row input[type="time"] {
+    margin: 0 5px;
+  }
+  
+  .form-row span + input {
+    margin-left: 5px;
+  }
+  
+  /* Ensure inputs don't overflow their containers */
+  .section {
+    overflow: hidden;
+  }
+  
+  /* Ensure consistent height for all inputs */
+  input {
+    height: 30px;
+    box-sizing: border-box;
+  }

@@ -1,0 +1,28 @@
+<div class="table-container">
+    <table class="visit-data-table">
+      <thead>
+        <tr>
+          <th>First Name</th>
+          <th>Last Name</th>
+          <th>DOB</th>
+          <th>Subject ID</th>
+          <th>Visit</th>
+          <th>Forms</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let row of visitData">
+          <td>{{row.first_name}}</td>
+          <td>{{row.last_name}}</td>
+          <td>{{row.dob}}</td>
+          <td>{{row.patient_id}}</td>
+          <td>{{row.visit_name}}</td>
+          <td class="form-buttons">
+            <button (click)="onWDClick(row)">WD</button>
+            <button (click)="onVolCalcClick(row)">Vol Calc</button>
+            <button (click)="onSMITClick(row)">SMIT</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
