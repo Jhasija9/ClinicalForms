@@ -3,6 +3,10 @@ import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
+import { Router } from '@angular/router';
+import { VisitDataService } from '../services/visit-data.service';
+import { HttpClientModule } from '@angular/common/http'; // Add this import
+
 
 @Component({
   selector: 'app-volume-calculation',
@@ -11,11 +15,14 @@ import jsPDF from 'jspdf';
   standalone: true,
   imports: [
     CommonModule,
-    ReactiveFormsModule
-  ]
+    ReactiveFormsModule,
+    HttpClientModule
+  ],
+  providers: [VisitDataService]
 })
 export class VolumeCalculationComponent implements OnInit {
   volumeForm: FormGroup;
+  rowData: any;
   decayFactors = [
     { day: 0, factor: 1.000 },
     { day: 1, factor: 0.933 },
@@ -30,7 +37,14 @@ export class VolumeCalculationComponent implements OnInit {
     { day: 10, factor: 0.500 }
   ];
 
-  constructor(private fb: FormBuilder) {
+  constructor(
+    private fb: FormBuilder,
+    private router: Router,
+    private visitDataService: VisitDataService
+  ) {
+    const navigation = this.router.getCurrentNavigation();
+    this.rowData = navigation?.extras?.state?.['data'];
+
     this.volumeForm = this.fb.group({
       patientName: [''],
       arm: [''],
@@ -70,11 +84,82 @@ export class VolumeCalculationComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.loadFormData();
+  }
+
+  loadFormData() {
+    if (this.rowData) {
+      this.visitDataService.getCombinedData().subscribe({
+        next: (data) => {
+          console.log('Combined Data:', data); // To see the data structure
+          
+          const formRecord = data.formData.find((record: any) => 
+            record.id === this.rowData.id
+          );
+          
+          if (formRecord) {
+            // Extract cycle and day from visit_name
+            const visitMatch = formRecord.visit_name?.toLowerCase().match(/cycle\s*(\d+)\s*day\s*(\d+)/i);
+          
+          let cycle = '';
+          let studyWeek = '';
+          
+          if (visitMatch) {
+            // Extract cycle number (e.g., "1" from "cycle1")
+            cycle = visitMatch[1];
+            // Extract day number (e.g., "1" from "day1")
+            studyWeek = visitMatch[2];
+          }
+
+            this.volumeForm.patchValue({
+              // Patient info
+              patientName: `${formRecord.first_name} ${formRecord.last_name}`,
+              subjectId: formRecord.patient_id,
+              cycle: cycle,  // Format as "Cycle 1"
+              studyWeek: studyWeek || '',         
+              dateOfService: formRecord.visit_date,
+              screeningWeight: formRecord.screening_weight,
+              weightDayOfDose: formRecord.current_weight,
+              // Calculate weight difference percentage
+              weightDiff: formRecord.screening_weight && formRecord.current_weight ? 
+                (((formRecord.current_weight - formRecord.screening_weight) / formRecord.screening_weight) * 100).toFixed(2) : ''
+            });
+          }
+
+          // Find matching study record
+          const studyRecord = data.studyData.find((record: any) => 
+            record.study_name === formRecord?.study_name
+          );
+
+          if (studyRecord) {
+            this.volumeForm.patchValue({
+              arm: studyRecord.arm_activity,
+              prescribedDosage: studyRecord.prescribed_dosage,
+              // Add other study-related fields as needed
+            });
+          }
+        },
+        error: (error) => {
+          console.error('Error loading data:', error);
+          // Handle error appropriately
+        }
+      });
+    }
   }
 
   calculateVolume() {
-    // Add volume calculation logic here
+    const formValues = this.volumeForm.value;
+    
+    // Add your volume calculation logic here
+    // Example:
+    if (formValues.prescribedDosage && formValues.decayFactor && formValues.rac) {
+      const calculatedVolume = formValues.prescribedDosage / (formValues.decayFactor * formValues.rac);
+      this.volumeForm.patchValue({
+        calculatedVolume: calculatedVolume.toFixed(2)
+      });
+    }
   }
+
   generatePDF() {
     const data = document.getElementById('volumeForm');
     if (data) {

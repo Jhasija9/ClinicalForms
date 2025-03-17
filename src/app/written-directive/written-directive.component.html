@@ -113,7 +113,7 @@
   
       <!-- Section 4 -->
       <div class="section">
-        <div class="section-header">4. DOSE DISPENSING</div>
+        <h2>4. DOSE DISPENSING</h2>
         <div class="form-row">
           <label>Syringe ID:</label>
           <input formControlName="syringeId">
@@ -126,7 +126,7 @@
   
       <!-- Section 5 -->
       <div class="section">
-        <div class="section-header">5. DOSE ADMINISTRATION</div>
+        <h2>5. DOSE ADMINISTRATION</h2>
         <div class="safety-checks">
           <div>
             <input type="checkbox" formControlName="informedConsent"> Informed Consent
@@ -140,21 +140,11 @@
         </div>
         <div class="anatomical-location">
           <label>Anatomical Location:</label>
-          <div class="checkbox-group">
-            <div>
-              <input type="checkbox" formControlName="rightPICC"> Right PICC
-            </div>
-            <div>
-              <input type="checkbox" formControlName="leftPICC"> Left PICC
-            </div>
-            <div>
-              <input type="checkbox" formControlName="chemoPort"> Chemo Port
-            </div>
-            <div>
-              <input type="checkbox" formControlName="other"> Other:
-              <input formControlName="otherLocation">
-            </div>
-          </div>
+          <input type="checkbox" formControlName="rightPICC"> Right PICC
+          <input type="checkbox" formControlName="leftPICC"> Left PICC
+          <input type="checkbox" formControlName="chemoPort"> Chemo Port
+          <input type="checkbox" formControlName="other"> Other:
+          <input formControlName="otherLocation">
         </div>
         <div class="form-row">
           <label>Start Date:</label>

@@ -53,27 +53,40 @@
       <div class="section">
         <h3>Section 3: (To be completed by Nuclear Technologist)</h3>
         <div class="three-column-grid">
-          <div class="column">
+          <!-- Vial Column -->
+          <div class="column vial-column">
             <h4>Vial</h4>
             <div class="form-row">
               <label>RX #:</label>
-              <input formControlName="vialRx">
+              <div class="input-wrapper">
+                <input formControlName="vialRx">
+              </div>
             </div>
             <div class="form-row">
               <label>Participant ID:</label>
-              <input formControlName="participantId">
+              <div class="input-wrapper">
+                <input formControlName="participantId">
+              </div>
             </div>
             <div class="form-row">
               <label>Volume:</label>
-              <input formControlName="volume" type="number"> mL
+              <div class="input-wrapper">
+                <input formControlName="volume" type="number">
+                <span class="unit">mL</span>
+              </div>
             </div>
             <div class="form-row">
               <label>Activity:</label>
-              <input formControlName="activity" type="number"> μCi
+              <div class="input-wrapper">
+                <input formControlName="activity" type="number">
+                <span class="unit">μCi</span>
+              </div>
             </div>
-            <div class="form-row">
+            <div class="form-row time-row">
               <label>Time:</label>
-              <input type="time"> Initials: <input>
+              <input type="time" class="time-input">
+              <label class="initials-label">Initials:</label>
+              <input class="initials-input">
             </div>
           </div>
           <div class="column">

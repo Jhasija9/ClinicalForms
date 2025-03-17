@@ -1,3 +1,4 @@
+/* Container and Header Styles */
 .form-container {
     background: white;
     padding: 20px;
@@ -24,6 +25,7 @@
     text-align: right;
   }
   
+  /* Patient Info Styles */
   .patient-info {
     background: #f0f0f0;
     padding: 10px;
@@ -36,6 +38,7 @@
     margin-bottom: 10px;
   }
   
+  /* Section Styles */
   .section {
     border: 1px solid #ccc;
     padding: 15px;
@@ -48,16 +51,118 @@
     margin: -15px -15px 15px -15px;
   }
   
+  /* Form Row Styles */
   .form-row {
     margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
   }
   
+  .form-row label {
+    min-width: 100px;
+    display: inline-block;
+    font-size: 14px;
+    color: #333;
+  }
+  
+  .form-row input {
+    height: 28px;
+    padding: 4px 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 150px;
+  }
+  
+  /* Input Types */
+  input[type="number"] {
+    width: 80px;
+  }
+  
+  input[type="date"],
+  input[type="time"] {
+    width: 130px;
+  }
+  
+  /* Section 3 Styles */
   .three-column-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
+    gap: 15px;
+    padding: 10px;
   }
   
+  .column {
+    position: relative;
+    padding: 0 10px;
+  }
+  
+  .column:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background-color: #ccc;
+  }
+  
+  .column h4 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-weight: bold;
+  }
+  
+  /* Section 3 - Vial Column Specific */
+  .section:nth-child(4) .column:first-child .form-row label {
+    min-width: 90px;
+    font-size: 13px;
+  }
+  
+  .section:nth-child(4) .column:first-child .form-row input {
+    width: 90px;
+  }
+  
+  .section:nth-child(4) .column:first-child .form-row input[formControlName="vialRx"],
+  .section:nth-child(4) .column:first-child .form-row input[formControlName="participantId"] {
+    width: 120px;
+  }
+  
+  .section:nth-child(4) .column:first-child input[type="time"] {
+    width: 90px;
+  }
+  
+  .section:nth-child(4) .column:first-child input[formControlName="initials"] {
+    width: 50px;
+  }
+  /* Update the time and initials layout in Section 3 */
+.section:nth-child(4) .column:first-child .form-row.time-row {
+    display: block;  /* Change from flex to block */
+  }
+  
+  .section:nth-child(4) .column:first-child .form-row.time-row label {
+    display: inline-block;
+    margin-bottom: 5px;
+  }
+  
+  .section:nth-child(4) .column:first-child .form-row.time-row input[type="time"] {
+    width: 120px;  /* Can be wider now since it's on its own line */
+    margin-bottom: 8px;
+  }
+  
+  .section:nth-child(4) .column:first-child .form-row.time-row .initials-input {
+    width: 80px;
+  }
+  
+  /* Units and Labels */
+  .form-row span {
+    margin-left: 4px;
+    font-size: 14px;
+    color: #666;
+    white-space: nowrap;
+  }
+  
+  /* Decay Factor Table */
   .decay-factor-table {
     margin: 20px 0;
   }
@@ -74,100 +179,24 @@
     text-align: center;
   }
   
+  /* Order Box */
   .order-box {
     border: 2px solid #000;
     padding: 15px;
     margin: 20px 0;
   }
   
+  /* Signature Section */
   .signature-section {
     margin-top: 20px;
   }
   
-  input {
-    padding: 4px 8px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-  }
-  
-  input[type="number"] {
-    width: 80px;
-  }
-  
-  input[type="date"],
-  input[type="time"] {
-    width: 130px;
-  }
-
-  .column {
-    background: white;
-    padding: 10px;
-  }
-  
-  .column h4 {
-    margin-top: 0;
-    margin-bottom: 15px;
-    font-weight: bold;
-  }
-  
-  .form-row {
-    margin-bottom: 10px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  
-  .form-row label {
-    min-width: 100px;
-    display: inline-block;
-  }
-  
-  .form-row input {
-    flex: 1;
-    max-width: 150px;
-  }
-  
-  /* For the time and initials row */
-  .form-row input[type="time"] {
-    width: 130px;
-    margin-right: 10px;
-  }
-  
-  .form-row input[formControlName="initials"] {
-    width: 80px;
-  }
-  
-  /* For units after inputs */
-  .form-row span {
-    margin-left: 5px;
-  }
-  
-  /* Adjust the three-column-grid */
-  .three-column-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
-    padding: 10px;
-  }
-  /* Add to your existing CSS */
-.button-container {
+  /* Button Styles */
+  .button-container {
     text-align: center;
     margin: 20px 0;
   }
   
-  .button-container button {
-    background: #1a73e8;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 16px;
-  }
-  
-  .button-container button:hover {
-    background: #1557b0;
-  }
   button {
     background: #1a73e8;
     color: white;
@@ -181,4 +210,24 @@
   
   button:hover {
     background: #1557b0;
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .three-column-grid {
+      grid-template-columns: 1fr;
+    }
+    
+    .column {
+      border-right: none;
+      border-bottom: 1px solid #ccc;
+    }
+    
+    .column:last-child {
+      border-bottom: none;
+    }
+    
+    .column:not(:last-child)::after {
+      display: none;
+    }
   }
