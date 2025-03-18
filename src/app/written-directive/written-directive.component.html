@@ -93,7 +93,7 @@
             <div class="form-row">
               <span class="number">2.</span>
               <label>Prescribed Dosage:</label>
-              <input type="number" formControlName="prescribedDosageKbq">
+              <input type="number" formControlName="prescribedDosage">
               <span>kBq</span>
               <input type="number" formControlName="prescribedDosageUci">
               <span>μCi</span>
@@ -421,7 +421,7 @@
       </div>
     </form>
   </div>
-
+  <button (click)="saveData()" class="save-button">Save</button>
   <!-- Excluded from PDF -->
   <button (click)="generatePDF()">Generate PDF</button>
 </div>

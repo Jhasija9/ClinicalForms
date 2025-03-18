@@ -20,7 +20,7 @@
         <tr *ngFor="let row of visitData">
           <td>{{row.first_name}}</td>
           <td>{{row.last_name}}</td>
-          <td>{{row.dob}}</td>
+          <td>{{row.dob.split("T")[0]}}</td>
           <td>{{row.patient_id}}</td>
           <td>{{row.visit_name}}</td>
           <td class="form-buttons">

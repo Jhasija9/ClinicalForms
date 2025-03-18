@@ -5,7 +5,7 @@ import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import { Router } from '@angular/router';
 import { VisitDataService } from '../services/visit-data.service';
-import { HttpClientModule } from '@angular/common/http'; // Add this import
+import { HttpClient, HttpClientModule } from '@angular/common/http'; // Add this import
 
 
 @Component({
@@ -40,7 +40,8 @@ export class VolumeCalculationComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private router: Router,
-    private visitDataService: VisitDataService
+    private visitDataService: VisitDataService,
+    private http: HttpClient
   ) {
     const navigation = this.router.getCurrentNavigation();
     this.rowData = navigation?.extras?.state?.['data'];
@@ -91,16 +92,19 @@ export class VolumeCalculationComponent implements OnInit {
     this.volumeForm.get('vialTime')?.valueChanges.subscribe(value => {
       if (value) {
           this.calculateDayDifference(value);
+
       }
   });
   this.volumeForm.get('prescribedDosage')?.valueChanges.subscribe(() => {
     this.calculateVolume();
+
 });
 
 this.volumeForm.get('racUci')?.valueChanges.subscribe(() => {
     this.calculateVolume();
+
 });
-    
+
   }
 
   loadFormData() {
@@ -108,7 +112,6 @@ this.volumeForm.get('racUci')?.valueChanges.subscribe(() => {
       this.visitDataService.getCombinedData().subscribe({
         next: (data) => {
           console.log('Combined Data:', data); // To see the data structure
-          
           
           const formRecord = data.formData.find((record: any) => 
             record.id === this.rowData.id
@@ -157,7 +160,7 @@ this.volumeForm.get('racUci')?.valueChanges.subscribe(() => {
               cycle: cycle,  // Format as "Cycle 1"
               studyWeek: studyWeek || '',         
               dateOfService: formatDate(formRecord.start),
-              screeningWeight: formRecord.screening_weight,
+              screeningWeight: (formRecord.screening_weight*0.453592).toFixed(2),
               weightDayOfDose: formRecord.current_weight,
               // Calculate weight difference percentage
               weightDiff: formRecord.screening_weight && formRecord.current_weight ? 
@@ -177,6 +180,8 @@ this.volumeForm.get('racUci')?.valueChanges.subscribe(() => {
               // Add other study-related fields as needed
             });
           }
+          this.loadData();
+
         },
         error: (error) => {
           console.error('Error loading data:', error);
@@ -288,5 +293,37 @@ this.volumeForm.get('racUci')?.valueChanges.subscribe(() => {
         window.open(pdfURL, '_blank');
       });
     }
+  }
+  loadData() {
+    const patientId = this.volumeForm.get('subjectId')?.value;
+    const DOS = this.volumeForm.get('dateOfService')?.value;
+  
+    console.log('DOS :>> ', DOS);
+    console.log('patientId :>> ', patientId);
+    if (!patientId || !DOS) {
+      alert('Please enter Patient ID and Date of Service first.');
+      return;
+    }
+  
+    this.http.get<any>(`http://localhost:3001/api/load-dos-details/${patientId}/${DOS}`).subscribe({
+      next: (response) => {
+        console.log('re :>> ', response);
+        if (Object.keys(response).length === 0) {
+          alert('No data found for this patient and date.');
+        } else {
+          console.log('response :>> ', response);
+          this.volumeForm.patchValue({
+            prescribedDosage: response.prescribedDosage,
+
+          }
+            
+          );
+        }
+      },
+      error: (error) => {
+        console.error('Error loading data:', error);
+        alert('Error loading data');
+      },
+    });
   }
 }

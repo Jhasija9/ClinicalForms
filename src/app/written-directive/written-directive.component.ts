@@ -19,26 +19,57 @@ export class WrittenDirectiveComponent implements OnInit {
     this.wdForm = new FormGroup({
       patientName: new FormControl(''),
       subjectId: new FormControl(''),
-      dob: new FormControl(''),
-      screeningWeight: new FormControl(''),
-      protocol: new FormControl(''),
+      DOS: new FormControl(''),
+      study_name: new FormControl(''),
+      visit: new FormControl(''),
+      weightDayOfDose: new FormControl(''),
+      dateCalibration: new FormControl(''),
+      timeCalibration: new FormControl(''),
+      rac: new FormControl(''),
+      racUci: new FormControl(''),
+      three_label_pictures: new FormControl(false),
+      fill_sec3_wd: new FormControl(false),
+      send_forms: new FormControl(false),
+      prescribedDosage: new FormControl(''),
+      prescribedDosageUci: new FormControl(''),
+      manufacturer: new FormControl(''),
+      containerId: new FormControl(''),
+      rx_batch: new FormControl(''),
+      lotBatch: new FormControl(''),
+      quality: new FormControl(false),
+      form: new FormControl(''),
+      volume: new FormControl(''),
+      vialActivityKbq: new FormControl(''),
+      vialActivityUci: new FormControl(''),
+      vial_activity_date: new FormControl(''),
+      vial_activity_time: new FormControl(''),
+      syringeId: new FormControl(''),
+      syringeVolume: new FormControl(''),
+      syringeActivityKbq: new FormControl(''),
+      syringeActivityUci: new FormControl(''),
+      syringe_activity_date: new FormControl(''),
+      syringe_activity_time: new FormControl(''),
+      proposed_administration_date: new FormControl(''),
+      proposed_administration_time: new FormControl(''),
+      treatmentNumber: new FormControl(''),
+      signature: new FormControl(''),
+      signatureDate: new FormControl(''),
+      signatureTime: new FormControl(''),
+      radiopharmaceutical: new FormControl(''),
+      administeredBy: new FormControl(''),
+      residualActivityKbq: new FormControl(''), // ✅ Added missing control
+      residualActivityUci: new FormControl(''),
+      residualDate: new FormControl(''),
+      residualTime: new FormControl(''),
+      residualInitials: new FormControl(''),
+      netActivityUci: new FormControl(''), // ✅ Added missing control
+      netActivityKbq: new FormControl(''), // ✅ Added missing control
+      physicianSignature: new FormControl(''), // ✅ Added missing control
       arm1: new FormControl(false),
       arm2: new FormControl(false),
       arm3: new FormControl(false),
       assignedDose: new FormControl(''),
-      prescribedDosage: new FormControl(''),
-      prescribedDosageUci: new FormControl(''),
-      adminDate: new FormControl(''),
-      adminTime: new FormControl(''),
-      authUserSignature: new FormControl(''),
-      signatureDate: new FormControl(''),
-      signatureTime: new FormControl(''),
-      manufacturer: new FormControl(''),
-      containerId: new FormControl(''),
-      lotBatch: new FormControl(''),
-      volume: new FormControl(''),
-      syringeId: new FormControl(''),
-      syringeVolume: new FormControl(''),
+      assignedDoseMCi: new FormControl(''),
       informedConsent: new FormControl(false),
       safetyChecklist: new FormControl(false),
       timeOut: new FormControl(false),
@@ -50,13 +81,15 @@ export class WrittenDirectiveComponent implements OnInit {
       startDate: new FormControl(''),
       startTime: new FormControl(''),
       endTime: new FormControl(''),
-      treatment_no: new FormControl(''),
-      route_of_administration: new FormControl(''),
-      radiopharmaceutical: new FormControl(''),
-      proposed_administration_date: new FormControl(''),
-      proposed_administration_time: new FormControl(''),
-      authorizedUser: new FormControl(''),
-      assignedDoseMCi:new FormControl(''),
+      impDate: new FormControl(''),
+      impTime: new FormControl(''),
+      impInitials: new FormControl(''),
+      qualityInitials: new FormControl(''),
+      syringeInitials: new FormControl(''),
+      syringeTime: new FormControl(''),
+      syringeDate: new FormControl(''),
+      screeningWeight: new FormControl(''),
+      dob: new FormControl(''),
     });
   }
   calculateAssignedDose() {
@@ -126,6 +159,8 @@ export class WrittenDirectiveComponent implements OnInit {
 
           });
         }
+        this.loadData()
+
       },
 
       error: (error) => {
@@ -144,11 +179,13 @@ export class WrittenDirectiveComponent implements OnInit {
             authorizedUser: data.PI || '',
           });
         }
+
       },
       error: (error) => {
         console.error('Error fetching data:', error);
       },
     });
+
   }
 
   generatePDF() {
@@ -261,5 +298,46 @@ export class WrittenDirectiveComponent implements OnInit {
         });
       });
     }
+  }
+  saveData() {
+    const formData = this.wdForm.value;
+    console.log('Saving data:', formData);
+
+    this.http.post('http://localhost:3001/api/save-dos-details', formData).subscribe({
+      next: (response) => {
+        console.log('Data saved successfully', response);
+        alert('Data saved successfully');
+      },
+      error: (error) => {
+        console.error('Error saving data:', error);
+        alert('Error saving data');
+      },
+    });
+  }
+  loadData() {
+    const patientId = this.wdForm.get('subjectId')?.value;
+    const DOS = this.wdForm.get('proposed_administration_date')?.value;
+  
+    console.log('DOS :>> ', DOS);
+    console.log('patientId :>> ', patientId);
+    if (!patientId || !DOS) {
+      alert('Please enter Patient ID and Date of Service first.');
+      return;
+    }
+  
+    this.http.get<any>(`http://localhost:3001/api/load-dos-details/${patientId}/${DOS}`).subscribe({
+      next: (response) => {
+        if (Object.keys(response).length === 0) {
+          alert('No data found for this patient and date.');
+        } else {
+          console.log('response :>> ', response);
+          this.wdForm.patchValue(response);
+        }
+      },
+      error: (error) => {
+        console.error('Error loading data:', error);
+        alert('Error loading data');
+      },
+    });
   }
 }
