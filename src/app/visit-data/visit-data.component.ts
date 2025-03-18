@@ -50,8 +50,7 @@ export class VisitDataComponent implements OnInit {
   }
 
   onSMITClick(row: VisitData): void {
-    console.log('SMIT clicked:', row);
-    this.router.navigate(['/volume-calculation'], { state: { data: row } });
-
+    // console.log('SMIT clicked:', row);
+    this.router.navigate(['/smith'], { state: { data: row } })
   }
 }

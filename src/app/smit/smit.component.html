@@ -1,0 +1,106 @@
+<div class="smit-container" id="smitForm">
+  <div class="header">
+    <img src="assets/images/logo.png" alt="United Theranostics Logo" />
+    <h1>Syringe Medicinal Information Tag</h1>
+    <h2>Fusion: FPI-2265-202</h2>
+  </div>
+
+  <form [formGroup]="smitForm">
+    <!-- One Column Layout with Inline Labels -->
+
+    <div class="form-section">
+      <label>SYRINGE ID:</label>
+      <input type="text" formControlName="syringeId" />
+    </div>
+
+    <div class="form-section">
+      <label>SOURCE -> Vial Rx #:</label>
+      <input type="text" formControlName="vialRx" />
+    </div>
+
+    <div class="form-section">
+      <label>Radiopharmaceutical:</label>
+      <input type="text" formControlName="radiopharmaceutical" />
+    </div>
+
+    <div class="form-section">
+      <label>Activity:</label>
+      <div class="activity-group">
+        <input type="number" formControlName="activityKBq" />
+        <span>kBq</span>
+        <input type="number" formControlName="activityUCi" />
+        <span>µCi</span>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <div class="datetime-group">
+        <label for="date">Date:</label>
+        <input type="date" id="date" formControlName="date" />
+        <label for="time">Time:</label>
+        <input type="time" id="time" formControlName="time" />
+      </div>
+    </div>
+
+    <div class="form-section">
+      <label>Volume:</label>
+      <input type="number" formControlName="volume" />
+      <span>mL</span>
+    </div>
+
+    <div class="form-section">
+      <h3>DISPENSED FOR:</h3>
+    </div>
+
+    <div class="form-section">
+      <label>Patient Name:</label>
+      <input type="text" formControlName="patientName" />
+    </div>
+
+    <div class="form-section">
+      <label>Subject ID:</label>
+      <input type="text" formControlName="subjectId" />
+    </div>
+
+    <div class="form-section">
+      <label>DOB:</label>
+      <input type="date" formControlName="dob" />
+    </div>
+
+    <div class="form-section">
+      <h3>EXPIRATION:</h3>
+    </div>
+
+    <div class="form-section">
+      <div class="datetime-group">
+        <label for="expirationDate">Date:</label>
+        <input
+          type="date"
+          id="expirationDate"
+          formControlName="expirationDate"
+        />
+        <label for="expirationTime">Time:</label>
+        <input
+          type="time"
+          id="expirationTime"
+          formControlName="expirationTime"
+        />
+      </div>
+    </div>
+
+    <div class="form-section">
+      <h3>PREPARED BY:</h3>
+    </div>
+
+    <div class="form-section">
+      <label>Technologist Name:</label>
+      <input type="text" formControlName="technologistName" />
+    </div>
+
+    <div class="form-section">
+      <label>Signature:</label>
+      <input type="text" formControlName="signature" />
+    </div>
+  </form>
+</div>
+<button (click)="generatePDF()">Generate PDF</button>
