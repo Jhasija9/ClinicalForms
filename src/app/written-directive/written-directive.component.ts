@@ -4,6 +4,8 @@ import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import { CommonModule } from '@angular/common';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { VisitData } from '../models/visit-data';
+import { VisitDataService } from '../services/visit-data.service';
 
 @Component({
   selector: 'app-written-directive',
@@ -15,7 +17,8 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 export class WrittenDirectiveComponent implements OnInit {
   wdForm: FormGroup;
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient,     private dataservice: VisitDataService  
+  ) {
     this.wdForm = new FormGroup({
       patientName: new FormControl(''),
       subjectId: new FormControl(''),
@@ -126,7 +129,9 @@ export class WrittenDirectiveComponent implements OnInit {
     this.http.get<any>('http://localhost:3001/api/form-data').subscribe({
       next: (response) => {
         if (response && response.length > 0) {
-          const data = response[0];
+          const data = response.find((x: { patient_id: string; })=>x.patient_id == this.dataservice.currentPatientID);
+          
+          console.log('data :>> ', data);
           console.log(data.start ? data.start.split('T')[1] : '');
           console.log(data.arm_name );
           console.log(data);
@@ -192,7 +197,11 @@ export class WrittenDirectiveComponent implements OnInit {
     const header = document.querySelector('.header'); // Capture header separately
     const formContent = document.querySelector('form'); // Capture form content separately
     const inputs = document.querySelectorAll('input');
-  
+    this.dataservice.Radio = this.wdForm.get('radiopharmaceutical')?.value;
+    this.dataservice.DOB = this.wdForm.get('')?.value;
+    this.dataservice.PtientName = this.wdForm.get('patientName')?.value;
+    this.dataservice.DOS = this.wdForm.get('DOS')?.value;
+    this.dataservice.RX = this.wdForm.get('rx_batch')?.value;
     // Temporarily remove borders for clean PDF output
     inputs.forEach((input) => {
       input.style.border = 'none';
@@ -303,6 +312,13 @@ export class WrittenDirectiveComponent implements OnInit {
     const formData = this.wdForm.value;
     console.log('Saving data:', formData);
 
+    this.dataservice.Radio = this.wdForm.get('radiopharmaceutical')?.value;
+    this.dataservice.DOB = this.wdForm.get('')?.value;
+    this.dataservice.PtientName = this.wdForm.get('patientName')?.value;
+    this.dataservice.DOS = this.wdForm.get('DOS')?.value;
+    this.dataservice.RX = this.wdForm.get('rx_batch')?.value;
+    this.dataservice.RX = this.wdForm.get('syringeId')?.value;
+
     this.http.post('http://localhost:3001/api/save-dos-details', formData).subscribe({
       next: (response) => {
         console.log('Data saved successfully', response);
@@ -320,15 +336,11 @@ export class WrittenDirectiveComponent implements OnInit {
   
     console.log('DOS :>> ', DOS);
     console.log('patientId :>> ', patientId);
-    if (!patientId || !DOS) {
-      alert('Please enter Patient ID and Date of Service first.');
-      return;
-    }
+
   
     this.http.get<any>(`http://localhost:3001/api/load-dos-details/${patientId}/${DOS}`).subscribe({
       next: (response) => {
         if (Object.keys(response).length === 0) {
-          alert('No data found for this patient and date.');
         } else {
           console.log('response :>> ', response);
           this.wdForm.patchValue(response);

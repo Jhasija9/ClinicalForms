@@ -5,6 +5,8 @@ import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { VisitDataService } from '../services/visit-data.service';
 
 @Component({
   selector: 'app-smit',
@@ -16,7 +18,7 @@ import jsPDF from 'jspdf';
 export class SmitComponent {
   smitForm: FormGroup;
 
-  constructor(private fb: FormBuilder, private router: Router) {
+  constructor(private fb: FormBuilder, private router: Router, private http: HttpClient, private dataservice:VisitDataService) {
     this.smitForm = this.fb.group({
       syringeId: [''],
       activityKBq: [''],
@@ -34,6 +36,19 @@ export class SmitComponent {
       signature: [''],
       radiopharmaceutical: [''],
     });
+  }
+
+  ngOnInit() {
+    this.smitForm.patchValue({
+      radiopharmaceutical: this.dataservice.Radio || '',
+      dob: this.dataservice.DOB.substring(0,10) || '',
+      patientName: this.dataservice.PtientName || '', // Fixed typo from 'PtientName'
+      vialRx: this.dataservice.RX || '',
+      subjectId:this.dataservice.currentPatientID ||"",
+      syringeId: this.dataservice.SyringeId ||"",
+    });
+    console.log('this.dataservice.SyringeId :>> ', this.dataservice.SyringeId);
+    this.loadData();
   }
 
   goBack() {
@@ -125,6 +140,30 @@ export class SmitComponent {
       });
     });
   }
+  loadData() {
+    const patientId = this.smitForm.get('subjectId')?.value;
+    const DOS = this.dataservice.DOS.substring(0,10) ;
   
+    console.log('DOS :>> ', DOS);
+    console.log('patientId :>> ', patientId);
+
+  
+    this.http.get<any>(`http://localhost:3001/api/load-dos-details/${patientId}/${DOS}`).subscribe({
+      next: (response) => {
+        if (Object.keys(response).length === 0) {
+        } else {
+          console.log('response :>> ', response);
+          this.smitForm.patchValue(response);
+          this.smitForm.patchValue({
+            radiopharmaceutical: 'FPI-2265(225Ac-PSMA-I&T)'
+          });
+        }
+      },
+      error: (error) => {
+        console.error('Error loading data:', error);
+        alert('Error loading data');
+      },
+    });
+  }
     
 }

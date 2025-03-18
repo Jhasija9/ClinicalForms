@@ -4,4 +4,5 @@ export interface VisitData {
     dob: string;
     patient_id: string;
     visit_name: string;
+    start:string
 }

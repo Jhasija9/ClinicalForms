@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { Router, RouterModule } from '@angular/router';  // Add this import
 import { VisitData } from '../models/visit-data';
+import { VisitDataService } from '../services/visit-data.service';
 
 @Component({
   selector: 'app-visit-data-table',
@@ -20,7 +21,8 @@ export class VisitDataComponent implements OnInit {
 
   constructor(
     private readonly http: HttpClient,
-    private readonly router: Router  // Add readonly
+    private readonly router: Router,
+    private dataservice: VisitDataService  
   ) { }
   ngOnInit(): void {
     this.loadVisitData();
@@ -31,6 +33,7 @@ export class VisitDataComponent implements OnInit {
       .subscribe({
         next: (data) => {
           this.visitData = data;
+          console.log('data :>> ', data);
         },
         error: (error) => {
           console.error('Error fetching data:', error);
@@ -40,17 +43,31 @@ export class VisitDataComponent implements OnInit {
 
   onWDClick(row: VisitData): void {
     // console.log('WD clicked:', row);
+    this.dataservice.currentPatientID = row.patient_id
+    this.dataservice.DOB = row.dob
+    this.dataservice.PtientName = row.first_name + " " + row.last_name
+    this.dataservice.DOS = row.start
+console.log('row.start :>> ', row.start);
     this.router.navigate(['/written-directive'], { state: { data: row } });
 
   }
 
   onVolCalcClick(row: VisitData): void {
     console.log('Vol Calc clicked:', row);
+    this.dataservice.currentPatientID = row.patient_id
+    this.dataservice.DOB = row.dob
+    this.dataservice.PtientName = row.first_name + " " + row.last_name
+    this.dataservice.DOS = row.start
+console.log('row.start :>> ', row.start);
     this.router.navigate(['/volume-calculation'], { state: { data: row } });
   }
 
   onSMITClick(row: VisitData): void {
-    // console.log('SMIT clicked:', row);
+    // console.log('SMIT clicked:', row);    this.dataservice.currentPatientID = row.patient_id
+    this.dataservice.DOB = row.dob
+    this.dataservice.PtientName = row.first_name + " " + row.last_name
+    this.dataservice.DOS = row.start
+console.log('row.start :>> ', row.start);
     this.router.navigate(['/smith'], { state: { data: row } })
   }
 }
