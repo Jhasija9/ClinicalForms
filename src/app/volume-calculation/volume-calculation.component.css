@@ -185,7 +185,49 @@
     padding: 15px;
     margin: 20px 0;
   }
+  .datetime-input {
+    padding: 6px 10px;
+    border: 2px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+    width: 150px; 
+    min-width: 190px; 
+    background-color: white;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    outline: none;
+}
+
+/* Style the calendar picker icon */
+input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+    cursor: pointer;
+    padding: 4px;
+}
+
+/* Ensure text doesn't get cut off */
+input[type="datetime-local"] {
+    font-family: Arial, sans-serif;  /* Use a consistent font */
+    letter-spacing: -0.2px;  /* Slightly reduce letter spacing if needed */
+}
   
+.checkbox-section {
+  margin: 20px 0;
+}
+
+.checkbox-item {
+  display: flex;
+  align-items: flex-start;
+  margin: 10px 0;
+  font-size: 16px;
+}
+
+.checkbox-item input[type="checkbox"] {
+  margin-right: 10px;
+  margin-top: 4px;  /* Align with text */
+}
+
+.checkbox-item label {
+  font-weight: normal;
+}
   /* Signature Section */
   .signature-section {
     margin-top: 20px;

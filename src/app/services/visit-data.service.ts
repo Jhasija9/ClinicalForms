@@ -3,12 +3,12 @@ import { HttpClient } from '@angular/common/http';
 import { forkJoin, Observable } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class VisitDataService {
   private baseUrl = 'http://localhost:3001/api';
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   // Get infusion visit data
   getFormData(): Observable<any> {
@@ -24,7 +24,7 @@ export class VisitDataService {
   getCombinedData(): Observable<any> {
     return forkJoin({
       formData: this.getFormData(),
-      studyData: this.getStudyData()
+      studyData: this.getStudyData(),
     });
   }
 }
