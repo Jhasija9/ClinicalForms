@@ -2,7 +2,7 @@
   <div id="pdfContent">
     <!-- Header Section -->
     <div class="header">
-      <img src="src/assests/images/logo.png" alt="United Theranostics" />
+      <img src="/assets/images/logo.png" alt="United Theranostics" />
       <h1>Written Directive</h1>
       <div class="form-info">
         <p>FPI-2265-202</p>
@@ -77,11 +77,17 @@
         <div class="section-header">2. DOSE ORDERING</div>
         
         <div class="form-row-container" style="display: flex; justify-content: space-between;">
-          <div class="form-left">
-            <div class="form-row">
+          <div class="form-left" >
+            <div class="form-row" style="justify-content: space-between !important;">
+              <div>
               <span class="number">1.</span>
               <label>Radiopharmaceutical:</label>
               <input type="text" value="Ac-225">
+            </div>
+              <div class="form-row">
+                <label>Treatment #</label>
+                <input type="number" formControlName="treatmentNumber">
+              </div>
             </div>
       
             <div class="form-row">
@@ -99,12 +105,16 @@
               <span>IV</span>
             </div>
       
-            <div class="form-row">
+            <div class="form-row" style="justify-content: space-between !important;">
+              <div class="form-row">
               <span class="number">4.</span>
               <label>Proposed Administration Date:</label>
               <input type="date" formControlName="proposed_administration_date">
-              <label class="time-label">Time:</label>
+              </div>
+              <div class="form-row">
+              <label class="time-label" st>Time:</label>
               <input type="time" formControlName="proposed_administration_time">
+              </div>
             </div>
       
             <div class="form-row">
@@ -129,10 +139,7 @@
           </div>
       
           <div class="form-right">
-            <div class="form-row">
-              <label>Treatment #</label>
-              <input type="number" formControlName="treatmentNumber">
-            </div>
+
       
             <div class="form-row signature-date-time">
               
@@ -214,6 +221,7 @@
               />
               <span>kBq</span>
             </div>
+            <div style="display: flex; justify-content: space-between;">
             <div class="form-row">
               <label>Date:</label>
               <input type="date" formControlName="impDate" />
@@ -226,6 +234,7 @@
               <label>Initials:</label>
               <input formControlName="impInitials" style="width: 80px" />
             </div>
+          </div>
           </div>
         </div>
       </div>

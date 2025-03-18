@@ -168,16 +168,20 @@ export class VolumeCalculationComponent implements OnInit {
 
   generatePDF() {
     const data = document.getElementById('volumeForm');
+    const inputs = document.querySelectorAll('input');
+    inputs.forEach((input) => {
+      input.style.border = 'none';
+      input.style.outline = 'none';
+      input.style.background = 'transparent';
+    });
     if (data) {
       const options = {
         allowTaint: true,
-        background: '#ffffff',
-        height: data.offsetHeight,
-        width: data.offsetWidth,
+        backgroundColor: '#ffffff',
         scrollX: 0,
         scrollY: -window.scrollY,
-        windowHeight: document.documentElement.scrollHeight,
         windowWidth: document.documentElement.scrollWidth,
+        windowHeight: document.documentElement.scrollHeight,
         onclone: (clonedDoc: Document) => {
           const clonedElement = clonedDoc.getElementById('volumeForm');
           if (clonedElement) {
@@ -188,27 +192,28 @@ export class VolumeCalculationComponent implements OnInit {
           }
         }
       };
-
+  
       html2canvas(data, options).then(canvas => {
-        const imgWidth = 210;
-        const pageHeight = 297;
-        const imgHeight = (canvas.height * imgWidth) / canvas.width;
-
         const pdf = new jsPDF('p', 'mm', 'a4');
-        let heightLeft = imgHeight;
-        let position = 0;
-
-        pdf.addImage(canvas, 'PNG', 0, 0, imgWidth, Math.min(pageHeight, imgHeight));
-        heightLeft -= pageHeight;
-
-        while (heightLeft > 0) {
-          position -= pageHeight;
-          pdf.addPage();
-          pdf.addImage(canvas, 'PNG', 0, position, imgWidth, imgHeight);
-          heightLeft -= pageHeight;
-        }
-
-        pdf.save('VolumeCalculation.pdf');
+  
+        const imgWidth = 190; // A4 width (210mm - 20mm margins)
+        const pageHeight = 297; // A4 height in mm
+        const formMargin = 12.7; // 0.5 inches = 12.7 mm
+            // Restore input field styles after rendering
+            inputs.forEach((input) => {
+              input.style.border = '';
+              input.style.outline = '';
+              input.style.background = '';
+            });
+        const imgHeight = (canvas.height * imgWidth) / canvas.width;
+        const maxHeight = pageHeight - formMargin; // Maximum height for one page
+  
+        pdf.addImage(canvas, 'PNG', 10, formMargin, imgWidth, Math.min(maxHeight, imgHeight));
+  
+        // Open in new tab (DO NOT ADD MORE PAGES)
+        const pdfBlob = pdf.output('blob');
+        const pdfURL = URL.createObjectURL(pdfBlob);
+        window.open(pdfURL, '_blank');
       });
     }
   }

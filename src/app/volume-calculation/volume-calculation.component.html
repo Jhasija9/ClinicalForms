@@ -1,7 +1,10 @@
-<div class="form-container">
+<div class="form-container" id="volumeForm">
     <div class="header">
-      <img src="assets/images/logo.png" alt="United Theranostics">
-      <div class="form-title">
+      <div class="form-title" style="    display: inline-flex
+      ;
+          justify-content: space-between;">
+        <img src="assets/images/logo.png" alt="United Theranostics">
+
         <h2>Form1: Volume Calculation</h2>
         <div class="form-info">
           <p>FPI-2265-120</p>
@@ -11,18 +14,18 @@
       </div>
     </div>
   
-    <form [formGroup]="volumeForm" id="volumeForm">
+    <form [formGroup]="volumeForm" >
       <!-- Patient Info Header -->
       <div class="patient-info">
         <div class="info-row">
-          <span>Patient Name: <input formControlName="patientName"></span>
-          <span>Arm: <input formControlName="arm"></span>
-          <span>Subject ID: <input formControlName="subjectId"></span>
+          <span style="height: 30px;">Patient Name: <input formControlName="patientName"></span>
+          <span style="height: 30px;">Arm: <input formControlName="arm"></span>
+          <span style="height: 30px;">Subject ID: <input formControlName="subjectId"></span>
         </div>
         <div class="info-row">
-          <span>Study Week: <input formControlName="studyWeek"></span>
-          <span>Cycle: <input formControlName="cycle"></span>
-          <span>Date of Service: <input formControlName="dateOfService" type="date"></span>
+          <span style="height: 30px;">Study Week: <input formControlName="studyWeek"></span>
+          <span style="height: 30px;">Cycle: <input formControlName="cycle"></span>
+          <span style="height: 30px;">Date of Service: <input formControlName="dateOfService" type="date"></span>
         </div>
       </div>
   

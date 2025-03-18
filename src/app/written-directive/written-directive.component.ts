@@ -72,7 +72,7 @@ export class WrittenDirectiveComponent implements OnInit {
     }
   
     const assignedDose = dosePerKg * screeningWeight;
-    const assignedDoseMCi = assignedDose/37;
+    const assignedDoseMCi = (assignedDose/37).toFixed(2);;
     this.wdForm.patchValue({
       assignedDose: assignedDose,
       assignedDoseMCi: assignedDoseMCi,
@@ -155,86 +155,106 @@ export class WrittenDirectiveComponent implements OnInit {
     const header = document.querySelector('.header'); // Capture header separately
     const formContent = document.querySelector('form'); // Capture form content separately
     const inputs = document.querySelectorAll('input');
-    // Remove borders temporarily
+  
+    // Temporarily remove borders for clean PDF output
     inputs.forEach((input) => {
       input.style.border = 'none';
       input.style.outline = 'none';
       input.style.background = 'transparent';
     });
+  
     if (header && formContent) {
-      // Convert header to canvas
       html2canvas(header as HTMLElement, {
         scale: 2,
         useCORS: true,
         backgroundColor: '#ffffff',
       }).then((headerCanvas) => {
-        // Convert form content to canvas
         html2canvas(formContent as HTMLElement, {
           scale: 2,
           useCORS: true,
           backgroundColor: '#ffffff',
         }).then((formCanvas) => {
           const pdf = new jsPDF('p', 'mm', 'a4');
-
-          // Restore borders after capturing
+          const pdfWidth = 210; // A4 width in mm
+          const pdfHeight = 297; // A4 height in mm
+  
+          const margin = 10;
+          const availableHeight = pdfHeight - 2 * margin; // Space for content
+  
+          // Restore input field styles after rendering
           inputs.forEach((input) => {
             input.style.border = '';
             input.style.outline = '';
             input.style.background = '';
           });
-
-          // Define margins
-          const headerMargin = 5.08; // 0.2 inches = 5.08 mm
-          const formMargin = 25.4 / 2; // 1 inch = 25.4 mm
-
-          const pdfWidth = 210 - 2 * formMargin; // A4 width minus left & right margins
+  
+          // Add the header at the top
           const headerHeight =
-            (headerCanvas.height * (210 - 2 * headerMargin)) /
-            headerCanvas.width;
-          const formHeight = (formCanvas.height * pdfWidth) / formCanvas.width;
-
-          let heightLeft = formHeight;
-          let position = headerMargin; // Start position after the small header margin
-
-          // Add the header
+            (headerCanvas.height * (pdfWidth - 2 * margin)) / headerCanvas.width;
           pdf.addImage(
             headerCanvas.toDataURL('image/png'),
             'PNG',
-            headerMargin,
-            position,
-            210 - 2 * headerMargin,
+            margin,
+            margin,
+            pdfWidth - 2 * margin,
             headerHeight
           );
-          position += headerHeight + formMargin - headerMargin; // Adjust position for form after 1-inch margin
-
-          // Add the first page of the form content
-          pdf.addImage(
-            formCanvas.toDataURL('image/png'),
-            'PNG',
-            formMargin,
-            position,
-            pdfWidth,
-            Math.min(formHeight, 297 - position - formMargin)
-          );
-          heightLeft -= 297 - position - formMargin;
-          position = 297 - formMargin;
-
-          // If content overflows, add new pages with 1-inch margin
-          while (heightLeft > 0) {
-            pdf.addPage();
-            pdf.addImage(
-              formCanvas.toDataURL('image/png'),
-              'PNG',
-              formMargin,
-              -position + formMargin,
-              pdfWidth,
-              formHeight
-            );
-            heightLeft -= 297 - 2 * formMargin;
-            position += 297 - 2 * formMargin;
+  
+          let yPosition = margin + headerHeight + 5; // Position after the header
+  
+          // Split the form into sections that fit in pages
+          let pageHeightLeft = availableHeight - headerHeight - 10;
+          let formImageHeight =
+            (formCanvas.height * (pdfWidth - 2 * margin)) / formCanvas.width;
+  
+          let formImageY = 0; // Track the form image Y offset
+  
+          while (formImageY < formCanvas.height) {
+            // Determine the part of the image to add on the current page
+            let sliceHeight = Math.min(pageHeightLeft, formImageHeight);
+  
+            // Capture the portion of the form for the current page
+            const formPartCanvas = document.createElement('canvas');
+            formPartCanvas.width = formCanvas.width;
+            formPartCanvas.height = (sliceHeight * formCanvas.width) / pdfWidth;
+  
+            const formPartContext = formPartCanvas.getContext('2d');
+            if (formPartContext) {
+              formPartContext.drawImage(
+                formCanvas,
+                0,
+                formImageY,
+                formCanvas.width,
+                formPartCanvas.height,
+                0,
+                0,
+                formCanvas.width,
+                formPartCanvas.height
+              );
+  
+              pdf.addImage(
+                formPartCanvas.toDataURL('image/png'),
+                'PNG',
+                margin,
+                yPosition,
+                pdfWidth - 2 * margin,
+                sliceHeight
+              );
+  
+              formImageY += formPartCanvas.height; // Move to next section
+              yPosition += sliceHeight; // Move the cursor down
+              pageHeightLeft -= sliceHeight;
+            }
+  
+            // If content overflows, add a new page
+            if (formImageY < formCanvas.height) {
+              pdf.addPage();
+              yPosition = margin; // Reset Y position for the new page
+              pageHeightLeft = availableHeight; // Reset page height
+            }
           }
-
-          // Open in a new tab instead of downloading
+  
+          // Open PDF in a new tab
           const pdfBlob = pdf.output('blob');
           const pdfUrl = URL.createObjectURL(pdfBlob);
           window.open(pdfUrl, '_blank');

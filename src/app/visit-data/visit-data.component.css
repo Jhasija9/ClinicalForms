@@ -33,3 +33,14 @@
   .form-buttons button:hover {
     background-color: #2980b9;
   }
+  .header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+    justify-content: space-between;
+  }
+  img{
+    height: 100px;
+    margin: 10px 40px 0px 40px;
+}
+  

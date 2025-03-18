@@ -166,6 +166,12 @@ input[type="checkbox"] {
   min-width: 60px;
 }
 
+.form-row-container{
+justify-content: space-between;
+}
+.form-left{
+  margin-right: 50px;
+}
 /* Print Styles */
 @media print {
   .wd-container {
@@ -198,3 +204,6 @@ input[type="checkbox"] {
   }
 }
 
+.page-break {
+  page-break-before: always;
+}

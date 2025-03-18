@@ -231,3 +231,9 @@
       display: none;
     }
   }
+  input {
+    height: 25px;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+    padding: 2px 5px;
+  }
