@@ -1,232 +1,253 @@
 <div class="form-container">
-    <div class="header">
-      <img src="assets/images/logo.png" alt="United Theranostics">
-      <div class="form-title">
-        <h2>Form1: Volume Calculation</h2>
-        <div class="form-info">
-          <p>FPI-2265-120</p>
-          <p>Site: Chesapeake</p>
-          <p>V.1.5 (17Feb2025)</p>
-        </div>
+  <div class="header">
+    <img src="assets/images/logo.png" alt="United Theranostics" />
+    <div class="form-title">
+      <h2>Form1: Volume Calculation</h2>
+      <div class="form-info">
+        <p>FPI-2265-120</p>
+        <p>Site: Chesapeake</p>
+        <p>V.1.5 (17Feb2025)</p>
       </div>
     </div>
-  
-    <form [formGroup]="volumeForm" id="volumeForm">
-      <!-- Patient Info Header -->
-      <div class="patient-info">
-        <div class="info-row">
-          <span>Patient Name: <input formControlName="patientName"></span>
-          <span>Arm: <input formControlName="arm"></span>
-          <span>Subject ID: <input formControlName="subjectId"></span>
-        </div>
-        <div class="info-row">
-          <span>Study Week: <input formControlName="studyWeek"></span>
-          <span>Cycle: <input formControlName="cycle"></span>
-          <span>Date of Service: <input formControlName="dateOfService" type="date"></span>
-        </div>
+  </div>
+
+  <form [formGroup]="volumeForm" id="volumeForm">
+    <!-- Patient Info Header -->
+    <div class="patient-info">
+      <div class="info-row">
+        <span>Patient Name: <input formControlName="patientName" /></span>
+        <span>Arm: <input formControlName="arm" /></span>
+        <span>Subject ID: <input formControlName="subjectId" /></span>
       </div>
-  
-      <!-- Section 1 -->
-      <div class="section">
-        <h3>Section 1: (To be completed by study coordinator BEFORE the day of dosing)</h3>
-        <div class="form-row">
-          <label>Screening Weight:</label>
-          <input formControlName="screeningWeight" type="number"> kg
-        </div>
-        <div class="form-row">
-          <label>Prescribed Dosage (from Written Directive):</label>
-          <input formControlName="prescribedDosage" type="number"> μCi
-        </div>
+      <div class="info-row">
+        <span>Study Week: <input formControlName="studyWeek" /></span>
+        <span>Cycle: <input formControlName="cycle" /></span>
+        <span
+          >Date of Service: <input formControlName="dateOfService" type="date"
+        /></span>
       </div>
-  
-      <!-- Section 2 -->
-      <div class="section">
-        <h3>Section 2: (To be completed by study coordinator ON the Day of Dosing)</h3>
-        <div class="form-row">
-          <label>Weight - Day of Dose:</label>
-          <input formControlName="weightDayOfDose" type="number"> kg
-          <span>Weight Diff%: <input formControlName="weightDiff" readonly> (if > 10% call sponsor)</span>
-        </div>
+    </div>
+
+    <!-- Section 1 -->
+    <div class="section">
+      <h3>
+        Section 1: (To be completed by study coordinator BEFORE the day of
+        dosing)
+      </h3>
+      <div class="form-row">
+        <label>Screening Weight:</label>
+        <input formControlName="screeningWeight" type="number" /> kg
       </div>
-  
-      <!-- Section 3 -->
-      <div class="section">
-        <h3>Section 3: (To be completed by Nuclear Technologist)</h3>
-        <div class="three-column-grid">
-          <!-- Vial Column -->
-          <div class="column vial-column">
-            <h4>Vial</h4>
-            <div class="form-row">
-              <label>RX #:</label>
-              <div class="input-wrapper">
-                <input formControlName="vialRx">
-              </div>
+      <div class="form-row">
+        <label>Prescribed Dosage (from Written Directive):</label>
+        <input formControlName="prescribedDosage" type="number" /> μCi
+      </div>
+    </div>
+
+    <!-- Section 2 -->
+    <div class="section">
+      <h3>
+        Section 2: (To be completed by study coordinator ON the Day of Dosing)
+      </h3>
+      <div class="form-row">
+        <label>Weight - Day of Dose:</label>
+        <input formControlName="dayOfDoseWeight" type="number" /> kg
+        <span
+          >Weight Diff%:
+          <input formControlName="weightDifference" readonly /> (if > 10% call
+          sponsor)</span
+        >
+      </div>
+    </div>
+
+    <!-- Section 3 -->
+    <div class="section">
+      <h3>Section 3: (To be completed by Nuclear Technologist)</h3>
+      <div class="three-column-grid">
+        <!-- Vial Column -->
+        <div class="column vial-column">
+          <h4>Vial</h4>
+          <div class="form-row">
+            <label>RX #:</label>
+            <div class="input-wrapper">
+              <input formControlName="vialRx" />
             </div>
-            <div class="form-row">
-              <label>Participant ID:</label>
-              <div class="input-wrapper">
-                <input formControlName="participantId">
-              </div>
+          </div>
+          <div class="form-row">
+            <label>Participant ID:</label>
+            <div class="input-wrapper">
+              <input formControlName="participantId" />
             </div>
-            <div class="form-row">
-              <label>Volume:</label>
-              <div class="input-wrapper">
-                <input formControlName="volume" type="number">
-                <span class="unit">mL</span>
-              </div>
+          </div>
+          <div class="form-row">
+            <label>Volume:</label>
+            <div class="input-wrapper">
+              <input formControlName="volume" type="number" />
+              <span class="unit">mL</span>
             </div>
-            <div class="form-row">
-              <label>Activity:</label>
-              <div class="input-wrapper">
-                <input formControlName="activity" type="number">
-                <span class="unit">μCi</span>
-              </div>
+          </div>
+          <div class="form-row">
+            <label>Activity:</label>
+            <div class="input-wrapper">
+              <input formControlName="activity" type="number" />
+              <span class="unit">μCi</span>
             </div>
-            <div class="form-row time-row">
-              <label>Time:</label>
-              <!-- <input type="time" class="time-input"> -->
-              <input 
-              type="datetime-local" 
+          </div>
+          <div class="form-row time-row">
+            <label>Time:</label>
+            <!-- <input type="time" class="time-input"> -->
+            <input
+              type="datetime-local"
               class="datetime-input"
               formControlName="vialTime"
-              step="1">
-              <label class="initials-label">Initials:</label>
-              <input class="initials-input">
-            </div>
+              step="1"
+            />
+            <label class="initials-label">Initials:</label>
+            <input class="initials-input" />
           </div>
-          <div class="column">
-            <h4>Large Label</h4>
-            <div class="form-row">
-              <label>RX #:</label>
-              <input formControlName="largeLabelRx">
-            </div>
-            <div class="form-row">
-              <label>Lot #:</label>
-              <input formControlName="lotNumber">
-            </div>
-            <div class="form-row">
-              <label>Participant ID:</label>
-              <input formControlName="participantIdLarge">
-            </div>
+        </div>
+        <div class="column">
+          <h4>Large Label</h4>
+          <div class="form-row">
+            <label>RX #:</label>
+            <input formControlName="largeLabelRx" />
           </div>
-      
-          <div class="column">
-            <h4>Certificate of Analysis</h4>
-            <div class="form-row">
-              <label>Batch #:</label>
-              <input formControlName="batchCertificate">
-            </div>
-            <div class="form-row">
-              <label>Lot #:</label>
-              <input formControlName="lotNumberCert">
-            </div>
-            <div class="form-row">
-              <label>Time of Calibration:</label>
-              <input type="time" formControlName="timeCalibration">
-            </div>
-            <div class="form-row">
-              <label>RAC:</label>
-              <input formControlName="rac" type="number"> kBq/mL
-            </div>
-            <div class="form-row">
-              <label>RAC:</label>
-              <input formControlName="racUci" type="number"> μCi/mL
-            </div>
+          <div class="form-row">
+            <label>Lot #:</label>
+            <input formControlName="lotNumber" />
+          </div>
+          <div class="form-row">
+            <label>Participant ID:</label>
+            <input formControlName="participantIdLarge" />
+          </div>
+        </div>
+
+        <div class="column">
+          <h4>Certificate of Analysis</h4>
+          <div class="form-row">
+            <label>Batch #:</label>
+            <input formControlName="batchCertificate" />
+          </div>
+          <div class="form-row">
+            <label>Lot #:</label>
+            <input formControlName="lotNumberCert" />
+          </div>
+          <div class="form-row">
+            <label>Time of Calibration:</label>
+            <!-- <input type="time" formControlName="timeCalibration" /> -->
+            <input
+            type="datetime-local"
+            class="datetime-input"
+            formControlName="vialTime"
+            step="1"
+          />
+          </div>
+          <div class="form-row">
+            <label>RAC:</label>
+            <input formControlName="rac" type="number" /> kBq/mL
+          </div>
+          <div class="form-row">
+            <label>RAC:</label>
+            <input formControlName="racUci" type="number" /> μCi/mL
           </div>
         </div>
       </div>
-          <!-- Add other columns similarly -->
-        <!-- </div>
+    </div>
+    <!-- Add other columns similarly -->
+    <!-- </div>
       </div> -->
 
-      <div class="checkbox-section">
-        <div class="checkbox-item">
-            <input type="checkbox" 
-                   formControlName="photoAttached" 
-                   id="photoAttached">
-            <label for="photoAttached">
-                Please take a photo of vial label, large label and COA and attach to this form.
-            </label>
-        </div>
-    
-        <div class="checkbox-item">
-            <input type="checkbox" 
-                   formControlName="section3Filled" 
-                   id="section3Filled">
-            <label for="section3Filled">
-                Please fill the section 3 of written directive.
-            </label>
-        </div>
+    <div class="checkbox-section">
+      <div class="checkbox-item">
+        <input
+          type="checkbox"
+          formControlName="photoAttached"
+          id="photoAttached"
+        />
+        <label for="photoAttached">
+          Please take a photo of vial label, large label and COA and attach to
+          this form.
+        </label>
+      </div>
+
+      <div class="checkbox-item">
+        <input
+          type="checkbox"
+          formControlName="section3Filled"
+          id="section3Filled"
+        />
+        <label for="section3Filled">
+          Please fill the section 3 of written directive.
+        </label>
+      </div>
     </div>
-  
-      <!-- Section 4 -->
-      <div class="section">
-        <h3>Section 4: Volume Calculation (Physician)</h3>
-        <div class="calculation-section">
+
+    <!-- Section 4 -->
+    <div class="section">
+      <h3>Section 4: Volume Calculation (Physician)</h3>
+      <div class="calculation-section">
+        <div class="form-row">
+          <label>Day Difference:</label>
+          <input formControlName="dayDifference" type="number" />
+          <label>Decay Factor:</label>
+          <input formControlName="decayFactor" readonly />
+        </div>
+
+        <div class="decay-factor-table">
+          <table>
+            <thead>
+              <tr>
+                <th>Days from Reference Day (0)</th>
+                <th>Decay factor Ac-225</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let factor of decayFactors">
+                <td>{{ factor.day }}</td>
+                <td>{{ factor.factor.toFixed(3) }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="order-box">
+          <h4>Order</h4>
           <div class="form-row">
-            <label>Day Difference:</label>
-            <input formControlName="dayDifference" type="number">
-            <label>Decay Factor:</label>
-            <input formControlName="decayFactor" readonly>
+            <label>Target Volume =</label>
+            <input formControlName="targetVolume" type="number" /> mL
           </div>
-  
-          <div class="decay-factor-table">
-            <table>
-              <thead>
-                <tr>
-                  <th>Days from Reference Day (0)</th>
-                  <th>Decay factor Ac-225</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr *ngFor="let factor of decayFactors">
-                  <td>{{factor.day}}</td>
-                  <td>{{factor.factor.toFixed(3)}}</td>
-                </tr>
-              </tbody>
-            </table>
+          <div class="form-row">
+            <label>Acceptable Range (+/- 10%) =</label>
+            <input formControlName="acceptableRangeMin" type="number" /> mL,
+            <input formControlName="acceptableRangeMax" type="number" /> mL
           </div>
-  
-          <div class="order-box">
-            <h4>Order</h4>
-            <div class="form-row">
-              <label>Target Volume =</label>
-              <input formControlName="targetVolume" type="number"> mL
-            </div>
-            <div class="form-row">
-              <label>Acceptable Range (+/- 10%) =</label>
-              <input formControlName="acceptableRangeMin" type="number"> mL,
-              <input formControlName="acceptableRangeMax" type="number"> mL
-            </div>
-            <div class="form-row">
-              <label>Target Activity =</label>
-              <input formControlName="targetActivity" type="number"> μCi
-            </div>
-            <div class="form-row">
-              <label>Acceptable Activity: (</label>
-              <input formControlName="acceptableActivityMin" type="number">,
-              <input formControlName="acceptableActivityMax" type="number">) μCi
-            </div>
+          <div class="form-row">
+            <label>Target Activity =</label>
+            <input formControlName="targetActivity" type="number" /> μCi
           </div>
-  
-          <div class="signature-section">
-            <div class="form-row">
-              <label>Authorizing Physician:</label>
-              <input formControlName="authorizingPhysician">
-            </div>
-            <div class="form-row">
-              <label>Signature:</label>
-              <input formControlName="signature">
-            </div>
-            <div class="form-row">
-              <label>Date:</label>
-              <input formControlName="date" type="date">
-            </div>
-            
-            
+          <div class="form-row">
+            <label>Acceptable Activity: (</label>
+            <input formControlName="acceptableActivityMin" type="number" />,
+            <input formControlName="acceptableActivityMax" type="number" />) μCi
+          </div>
+        </div>
+
+        <div class="signature-section">
+          <div class="form-row">
+            <label>Authorizing Physician:</label>
+            <input formControlName="authorizingPhysician" />
+          </div>
+          <div class="form-row">
+            <label>Signature:</label>
+            <input formControlName="signature" />
+          </div>
+          <div class="form-row">
+            <label>Date:</label>
+            <input formControlName="date" type="date" />
           </div>
         </div>
       </div>
-      <button (click)="generatePDF()">Generate PDF</button>
-    </form>
-  </div>
+    </div>
+    <button (click)="generatePDF()">Generate PDF</button>
+  </form>
+</div>
