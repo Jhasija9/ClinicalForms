@@ -87,7 +87,12 @@
             </div>
             <div class="form-row time-row">
               <label>Time:</label>
-              <input type="time" class="time-input">
+              <!-- <input type="time" class="time-input"> -->
+              <input 
+              type="datetime-local" 
+              class="datetime-input"
+              formControlName="vialTime"
+              step="1">
               <label class="initials-label">Initials:</label>
               <input class="initials-input">
             </div>
@@ -136,6 +141,26 @@
           <!-- Add other columns similarly -->
         <!-- </div>
       </div> -->
+
+      <div class="checkbox-section">
+        <div class="checkbox-item">
+            <input type="checkbox" 
+                   formControlName="photoAttached" 
+                   id="photoAttached">
+            <label for="photoAttached">
+                Please take a photo of vial label, large label and COA and attach to this form.
+            </label>
+        </div>
+    
+        <div class="checkbox-item">
+            <input type="checkbox" 
+                   formControlName="section3Filled" 
+                   id="section3Filled">
+            <label for="section3Filled">
+                Please fill the section 3 of written directive.
+            </label>
+        </div>
+    </div>
   
       <!-- Section 4 -->
       <div class="section">

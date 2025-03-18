@@ -79,12 +79,28 @@ export class VolumeCalculationComponent implements OnInit {
       acceptableActivityMax: [''],
       authorizingPhysician: [''],
       signature: [''],
-      date: ['']
+      date: [''],
+      vialTime: [''],
+      photoAttached: [false],
+     section3Filled: [false]
     });
   }
 
   ngOnInit(): void {
     this.loadFormData();
+    this.volumeForm.get('vialTime')?.valueChanges.subscribe(value => {
+      if (value) {
+          this.calculateDayDifference(value);
+      }
+  });
+  this.volumeForm.get('prescribedDosage')?.valueChanges.subscribe(() => {
+    this.calculateVolume();
+});
+
+this.volumeForm.get('racUci')?.valueChanges.subscribe(() => {
+    this.calculateVolume();
+});
+    
   }
 
   loadFormData() {
@@ -116,6 +132,23 @@ export class VolumeCalculationComponent implements OnInit {
             // Extract day number (e.g., "1" from "day1")
             studyWeek = visitMatch[2];
           }
+          const studyRecord = data.studyData.find((record: any) => 
+            record.study_name === formRecord.protocol_number
+          );
+
+          if (studyRecord && studyRecord.arm_activity) {
+            // Find matching arm activity based on arm_name
+            const matchingArm = studyRecord.arm_activity.find(
+              (arm: any) => arm.arm === formRecord.arm_name
+            );
+
+            if (matchingArm) {
+              this.volumeForm.patchValue({
+                arm: `${matchingArm.activity} ${matchingArm.activity_unit}`  // This will be 50, 75, or 100
+              });
+            }
+          }
+          
 
             this.volumeForm.patchValue({
               // Patient info
@@ -153,16 +186,55 @@ export class VolumeCalculationComponent implements OnInit {
     }
   }
 
-  calculateVolume() {
-    const formValues = this.volumeForm.value;
+  calculateDayDifference(vialDate: string) {
+    // Get current date/time
+    const now = new Date();
     
-    // Add your volume calculation logic here
-    // Example:
-    if (formValues.prescribedDosage && formValues.decayFactor && formValues.rac) {
-      const calculatedVolume = formValues.prescribedDosage / (formValues.decayFactor * formValues.rac);
-      this.volumeForm.patchValue({
-        calculatedVolume: calculatedVolume.toFixed(2)
-      });
+    // Convert vial date string to Date object
+    const vialTime = new Date(vialDate);
+    
+    // Calculate difference in milliseconds
+    const diffTime = Math.abs(now.getTime() - vialTime.getTime());
+    
+    // Convert to days and round to nearest integer
+    const diffDays = Math.round(diffTime / (1000 * 60 * 60 * 24));
+    const decayFactor = this.decayFactors.find(df => df.day === diffDays)?.factor || '';
+
+    
+    // Update the dayDifference field
+    this.volumeForm.patchValue({
+        dayDifference: diffDays,
+        decayFactor: decayFactor
+    });
+    this.calculateVolume();
+}
+
+  calculateVolume() {
+    const prescribedDose = this.volumeForm.get('prescribedDosage')?.value;
+    const decayFactor = this.volumeForm.get('decayFactor')?.value;
+    const racUci = this.volumeForm.get('racUci')?.value;
+
+    if (prescribedDose && decayFactor && racUci) {
+        const targetVolume = prescribedDose / (decayFactor * racUci);
+        // const tenPercent = targetVolume * 0.10;
+        // const minRange = (targetVolume - tenPercent).toFixed(2);
+        // const maxRange = (targetVolume + tenPercent).toFixed(2);
+
+        const targetActivity = targetVolume * racUci;
+
+        // Calculate ±10% ranges for both volume and activity
+        const tenPercentVolume = targetVolume * 0.10;
+        const tenPercentActivity = targetActivity * 0.10;
+        
+        this.volumeForm.patchValue({
+            targetVolume: targetVolume.toFixed(2),
+            acceptableRangeMin: (targetVolume - tenPercentVolume).toFixed(2),
+            acceptableRangeMax: (targetVolume + tenPercentVolume).toFixed(2),
+            targetActivity: targetActivity.toFixed(2),
+            acceptableActivityMin: (targetActivity - tenPercentActivity).toFixed(2),
+            acceptableActivityMax: (targetActivity + tenPercentActivity).toFixed(2)
+        });
+        console.log('Target Volume:', targetVolume);
     }
   }
 
