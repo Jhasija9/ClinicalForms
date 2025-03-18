@@ -1,4 +1,3 @@
-<!-- smit.component.html -->
 <div class="smit-container" id="smitForm">
   <div class="header">
     <img src="assets/images/logo.png" alt="United Theranostics Logo" />
@@ -7,93 +6,101 @@
   </div>
 
   <form [formGroup]="smitForm">
-    <div class="top-section">
-      <div class="syringe-section">
-        <label>SYRINGE ID:</label>
-        <input type="text" formControlName="syringeId" />
-      </div>
+    <!-- One Column Layout with Inline Labels -->
 
-      <div class="source-section">
-        <label>SOURCE -> Vial Rx #:</label>
-        <input type="text" formControlName="vialRx" />
+    <div class="form-section">
+      <label>SYRINGE ID:</label>
+      <input type="text" formControlName="syringeId" />
+    </div>
+
+    <div class="form-section">
+      <label>SOURCE -> Vial Rx #:</label>
+      <input type="text" formControlName="vialRx" />
+    </div>
+
+    <div class="form-section">
+      <label>Radiopharmaceutical:</label>
+      <input type="text" formControlName="radiopharmaceutical" />
+    </div>
+
+    <div class="form-section">
+      <label>Activity:</label>
+      <div class="activity-group">
+        <input type="number" formControlName="activityKBq" />
+        <span>kBq</span>
+        <input type="number" formControlName="activityUCi" />
+        <span>µCi</span>
       </div>
     </div>
 
-    <div class="form-row">
-      <!-- Left: Radiopharmaceutical Section -->
-      <div class="form-section">
-        <div class="radiopharmaceutical-group">
-          <label>Radiopharmaceutical:</label>
-          <input type="text" formControlName="radiopharmaceutical" />
-        </div>
-
-        <div class="activity-group">
-          <label>Activity:</label>
-          <input type="number" formControlName="activityKBq" />
-          <span>kBq</span>
-          <input type="number" formControlName="activityUCi" />
-          <span>µCi</span>
-        </div>
-
-        <div class="datetime-group">
-          <!-- Date: Label & Input on the same line -->
-          <div class="datetime-row">
-            <label for="date">Date:</label>
-            <input type="date" id="date" formControlName="date" />
-          </div>
-
-          <!-- Time: Label & Input on the same line (next line) -->
-          <div class="datetime-row">
-            <label for="time">Time:</label>
-            <input type="time" id="time" formControlName="time" />
-          </div>
-        </div>
-
-        <div class="volume-group">
-          <label>Volume:</label>
-          <input type="number" formControlName="volume" />
-          <span>mL</span>
-        </div>
-      </div>
-
-      <!-- Right: Dispensed For Section -->
-      <div class="form-section">
-        <h3>DISPENSED FOR:</h3>
-        <div class="patient-info">
-          <label>Patient Name:</label>
-          <input type="text" formControlName="patientName" />
-
-          <label>Subject ID:</label>
-          <input type="text" formControlName="subjectId" />
-
-          <label>DOB:</label>
-          <input type="date" formControlName="dob" />
-        </div>
+    <div class="form-section">
+      <div class="datetime-group">
+        <label for="date">Date:</label>
+        <input type="date" id="date" formControlName="date" />
+        <label for="time">Time:</label>
+        <input type="time" id="time" formControlName="time" />
       </div>
     </div>
 
-    <div class="bottom-section">
-      <div class="expiration-section">
-        <h3>EXPIRATION:</h3>
-        <div class="expiration-group">
-          <label>Date:</label>
-          <input type="date" formControlName="expirationDate" />
-          <label>Time:</label>
-          <input type="time" formControlName="expirationTime" />
-        </div>
-      </div>
+    <div class="form-section">
+      <label>Volume:</label>
+      <input type="number" formControlName="volume" />
+      <span>mL</span>
+    </div>
 
-      <div class="prepared-section">
-        <h3>PREPARED BY:</h3>
-        <div class="prepared-by">
-          <label>Technologist Name:</label>
-          <input type="text" formControlName="technologistName" />
+    <div class="form-section">
+      <h3>DISPENSED FOR:</h3>
+    </div>
 
-          <label>Signature:</label>
-          <input type="text" formControlName="signature" />
-        </div>
+    <div class="form-section">
+      <label>Patient Name:</label>
+      <input type="text" formControlName="patientName" />
+    </div>
+
+    <div class="form-section">
+      <label>Subject ID:</label>
+      <input type="text" formControlName="subjectId" />
+    </div>
+
+    <div class="form-section">
+      <label>DOB:</label>
+      <input type="date" formControlName="dob" />
+    </div>
+
+    <div class="form-section">
+      <h3>EXPIRATION:</h3>
+    </div>
+
+    <div class="form-section">
+      <div class="datetime-group">
+        <label for="expirationDate">Date:</label>
+        <input
+          type="date"
+          id="expirationDate"
+          formControlName="expirationDate"
+        />
+        <label for="expirationTime">Time:</label>
+        <input
+          type="time"
+          id="expirationTime"
+          formControlName="expirationTime"
+        />
       </div>
     </div>
-    <button (click)="generatePDF()">Generate PDF</button>
+
+    <div class="form-section">
+      <h3>PREPARED BY:</h3>
+    </div>
+
+    <div class="form-section">
+      <label>Technologist Name:</label>
+      <input type="text" formControlName="technologistName" />
+    </div>
+
+    <div class="form-section">
+      <label>Signature:</label>
+      <input type="text" formControlName="signature" />
+    </div>
   </form>
 </div>
+<button (click)="generatePDF()">Generate PDF</button>

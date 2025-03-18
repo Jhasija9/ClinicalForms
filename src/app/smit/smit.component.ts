@@ -66,13 +66,13 @@ export class SmitComponent {
         useCORS: true,
         backgroundColor: '#ffffff',
       }).then((formCanvas) => {
-        // Set custom page size: 90 mm × 110 mm
-        const pdf = new jsPDF('p', 'mm', [110, 90]);
+        // Set custom page size: 4 × 6 inches (101.6 mm × 152.4 mm)
+        const pdf = new jsPDF('p', 'mm', [152.4, 101.6]);
   
         // Define margins
         const margin = 5; // Keep a 5mm margin
   
-        const pdfWidth = 90 - 2 * margin; // Adjust for left & right margins
+        const pdfWidth = 101.6 - 2 * margin; // Adjust for left & right margins
         const headerHeight =
           (headerCanvas.height * pdfWidth) / headerCanvas.width;
         const formHeight = (formCanvas.height * pdfWidth) / formCanvas.width;
@@ -98,10 +98,10 @@ export class SmitComponent {
           margin,
           position,
           pdfWidth,
-          Math.min(formHeight, 110 - position - margin)
+          Math.min(formHeight, 152.4 - position - margin)
         );
-        heightLeft -= 110 - position - margin;
-        position = 110 - margin;
+        heightLeft -= 152.4 - position - margin;
+        position = 152.4 - margin;
   
         // If content overflows, add new pages
         while (heightLeft > 0) {
@@ -114,8 +114,8 @@ export class SmitComponent {
             pdfWidth,
             formHeight
           );
-          heightLeft -= 110 - 2 * margin;
-          position += 110 - 2 * margin;
+          heightLeft -= 152.4 - 2 * margin;
+          position += 152.4 - 2 * margin;
         }
   
         // Open the PDF in a new tab instead of downloading
@@ -125,5 +125,6 @@ export class SmitComponent {
       });
     });
   }
+  
     
 }
