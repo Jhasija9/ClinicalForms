@@ -53,4 +53,8 @@ export class VisitDataComponent implements OnInit {
     // console.log('SMIT clicked:', row);
     this.router.navigate(['/smith'], { state: { data: row } })
   }
+  onSLipClick(row: VisitData): void {
+    // console.log('SMIT clicked:', row);
+    this.router.navigate(['/syringe'], { state: { data: row } })
+  }
 }
