@@ -147,7 +147,21 @@ export class SmitComponent {
     console.log('DOS :>> ', DOS);
     console.log('patientId :>> ', patientId);
 
-  
+    this.http.get<any>('http://localhost:3001/api/study-data').subscribe({
+      next: (response) => {
+        if (response && response.length > 0) {
+          const data = response[0];
+          console.log(data);
+          this.smitForm.patchValue({
+            radiopharmaceutical: data.radiopharmaceutical || ''
+          });
+        }
+
+      },
+      error: (error) => {
+        console.error('Error fetching data:', error);
+      },
+    });
     this.http.get<any>(`http://localhost:3001/api/load-dos-details/${patientId}/${DOS}`).subscribe({
       next: (response) => {
         if (Object.keys(response).length === 0) {
@@ -155,7 +169,7 @@ export class SmitComponent {
           console.log('response :>> ', response);
           this.smitForm.patchValue(response);
           this.smitForm.patchValue({
-            radiopharmaceutical: 'FPI-2265(225Ac-PSMA-I&T)'
+            volume: response.syringeVolume
           });
         }
       },

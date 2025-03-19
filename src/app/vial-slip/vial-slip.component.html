@@ -1,0 +1,18 @@
+<!-- vial-slip.component.html -->
+<div class="vial-slip-container" id="newForm">
+  <!-- <h1>Vial Slip</h1> -->
+
+  <form [formGroup]="vialForm">
+    <div class="form-row" style="display: block; font-size: 30px !important">
+      <div class="input-group">
+        <label class="label">Rx:</label>
+        <input type="text" formControlName="rx" />
+      </div>
+      <div class="input-group">
+        <label class="label">Syringe ID:</label>
+        <input type="text" formControlName="syringeId" />
+      </div>
+    </div>
+  </form>
+</div>
+<button class="button" (click)="generatePDF()">Generate PDF</button>

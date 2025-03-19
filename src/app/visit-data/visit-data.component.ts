@@ -63,11 +63,15 @@ console.log('row.start :>> ', row.start);
   }
 
   onSMITClick(row: VisitData): void {
-    // console.log('SMIT clicked:', row);    this.dataservice.currentPatientID = row.patient_id
+    this.dataservice.currentPatientID = row.patient_id
     this.dataservice.DOB = row.dob
     this.dataservice.PtientName = row.first_name + " " + row.last_name
     this.dataservice.DOS = row.start
 console.log('row.start :>> ', row.start);
     this.router.navigate(['/smith'], { state: { data: row } })
+  }
+  onSLipClick(row: VisitData): void {
+    // console.log('SMIT clicked:', row);
+    this.router.navigate(['/syringe'], { state: { data: row } })
   }
 }

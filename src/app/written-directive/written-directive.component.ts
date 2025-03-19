@@ -6,6 +6,7 @@ import { CommonModule } from '@angular/common';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { VisitData } from '../models/visit-data';
 import { VisitDataService } from '../services/visit-data.service';
+import { distinctUntilChanged } from 'rxjs';
 
 @Component({
   selector: 'app-written-directive',
@@ -126,6 +127,12 @@ export class WrittenDirectiveComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.setupAssignedDoseSync();
+    this.setupPrescribedDosageSync();
+    this.setupVialActivitySync();
+    this.setupSyringeActivitySync();
+    this.setupNetActivitySync();
+    this.setupResidualActivitySync();
     this.http.get<any>('http://localhost:3001/api/form-data').subscribe({
       next: (response) => {
         if (response && response.length > 0) {
@@ -157,15 +164,17 @@ export class WrittenDirectiveComponent implements OnInit {
               ? data.start.split('T')[0]
               : '',
             proposed_administration_time: this.formatTime(data.start),
-              arm1: data.arm_name === 'Arm 1',
-              arm2: data.arm_name === 'Arm 2',
-              arm3: data.arm_name === 'Arm 3',    
+              arm1: data.arm_name.trim() === 'Arm 1',
+              arm2: data.arm_name.trim() === 'Arm 2',
+              arm3: data.arm_name.trim() === 'Arm 3',    
                // Convert from kBq to MBq
 
           });
         }
         this.loadData()
+        this.setupFormValueSubscriptions();
 
+        
       },
 
       error: (error) => {
@@ -192,7 +201,113 @@ export class WrittenDirectiveComponent implements OnInit {
     });
 
   }
+  private setupResidualActivitySync() {
+    this.setupTwoWaySync('residualActivityKbq', 'residualActivityUci', 37);
+  }
+  
+  private setupNetActivitySync() {
+    this.setupTwoWaySync('netActivityKbq', 'netActivityUci', 37);
+  }
+  
+  private setupSyringeActivitySync() {
+    this.setupTwoWaySync('syringeActivityKbq', 'syringeActivityUci', 37);
+  }
+  
+  // ✅ Generic function for 2-way binding (kBq ⇄ Uci conversions)
+  private setupTwoWaySync(kbqField: string, uciField: string, conversionFactor: number) {
+    this.wdForm.get(kbqField)?.valueChanges.pipe(distinctUntilChanged()).subscribe(value => {
+      const kbqValue = parseFloat(value);
+      if (!isNaN(kbqValue)) {
+        const uciValue = (kbqValue / conversionFactor).toFixed(2);
+        this.wdForm.patchValue({ [uciField]: uciValue }, { emitEvent: false });
+      }
+    });
+  
+    this.wdForm.get(uciField)?.valueChanges.pipe(distinctUntilChanged()).subscribe(value => {
+      const uciValue = parseFloat(value);
+      if (!isNaN(uciValue)) {
+        const kbqValue = (uciValue * conversionFactor).toFixed(2);
+        this.wdForm.patchValue({ [kbqField]: kbqValue }, { emitEvent: false });
+      }
+    });
+  }
+  private setupVialActivitySync() {
+    this.wdForm.get('vialActivityKbq')?.valueChanges.pipe(distinctUntilChanged()).subscribe(value => {
+      const vialActivityKbq = parseFloat(value);
+      if (!isNaN(vialActivityKbq)) {
+        const vialActivityUci = (vialActivityKbq / 37).toFixed(2);
+        this.wdForm.patchValue({ vialActivityUci }, { emitEvent: false }); // Prevent infinite loop
+      }
+    });
+  
+    this.wdForm.get('vialActivityUci')?.valueChanges.pipe(distinctUntilChanged()).subscribe(value => {
+      const vialActivityUci = parseFloat(value);
+      if (!isNaN(vialActivityUci)) {
+        const vialActivityKbq = (vialActivityUci * 37).toFixed(2);
+        this.wdForm.patchValue({ vialActivityKbq }, { emitEvent: false }); // Prevent infinite loop
+      }
+    });
+  }
 
+  private setupFormValueSubscriptions() {
+    this.wdForm.get('radiopharmaceutical')?.valueChanges.subscribe(value => {
+      this.dataservice.Radio = value;
+    });
+
+    this.wdForm.get('DOB')?.valueChanges.subscribe(value => {
+      this.dataservice.DOB = value;
+    });
+
+    this.wdForm.get('patientName')?.valueChanges.subscribe(value => {
+      this.dataservice.PtientName = value;
+    });
+
+    this.wdForm.get('DOS')?.valueChanges.subscribe(value => {
+      this.dataservice.DOS = value;
+    });
+
+    this.wdForm.get('rx_batch')?.valueChanges.subscribe(value => {
+      this.dataservice.RX = value;
+    });
+
+    this.wdForm.get('syringeId')?.valueChanges.subscribe(value => {
+      this.dataservice.RX = value;  // Consider using a different field instead of overwriting RX
+    });
+  }
+  private setupPrescribedDosageSync() {
+    this.wdForm.get('prescribedDosage')?.valueChanges.pipe(distinctUntilChanged()).subscribe(value => {
+      const prescribedDosage = parseFloat(value);
+      if (!isNaN(prescribedDosage)) {
+        const prescribedDosageUci = (prescribedDosage / 37).toFixed(2);
+        this.wdForm.patchValue({ prescribedDosageUci }, { emitEvent: false }); // Prevent infinite loop
+      }
+    });
+  
+    this.wdForm.get('prescribedDosageUci')?.valueChanges.pipe(distinctUntilChanged()).subscribe(value => {
+      const prescribedDosageUci = parseFloat(value);
+      if (!isNaN(prescribedDosageUci)) {
+        const prescribedDosage = (prescribedDosageUci * 37).toFixed(2);
+        this.wdForm.patchValue({ prescribedDosage }, { emitEvent: false }); // Prevent infinite loop
+      }
+    });
+  }
+  private setupAssignedDoseSync() {
+    this.wdForm.get('assignedDose')?.valueChanges.pipe(distinctUntilChanged()).subscribe(value => {
+      const assignedDose = parseFloat(value);
+      if (!isNaN(assignedDose)) {
+        const assignedDoseMCi = (assignedDose / 37).toFixed(2);
+        this.wdForm.patchValue({ assignedDoseMCi }, { emitEvent: false }); // Prevent infinite loop
+      }
+    });
+  
+    this.wdForm.get('assignedDoseMCi')?.valueChanges.pipe(distinctUntilChanged()).subscribe(value => {
+      const assignedDoseMCi = parseFloat(value);
+      if (!isNaN(assignedDoseMCi)) {
+        const assignedDose = (assignedDoseMCi * 37).toFixed(2);
+        this.wdForm.patchValue({ assignedDose }, { emitEvent: false }); // Prevent infinite loop
+      }
+    });
+  }
   generatePDF() {
     const header = document.querySelector('.header'); // Capture header separately
     const formContent = document.querySelector('form'); // Capture form content separately
@@ -330,6 +445,7 @@ export class WrittenDirectiveComponent implements OnInit {
       },
     });
   }
+
   loadData() {
     const patientId = this.wdForm.get('subjectId')?.value;
     const DOS = this.wdForm.get('proposed_administration_date')?.value;

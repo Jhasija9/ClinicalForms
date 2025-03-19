@@ -6,6 +6,7 @@ import jsPDF from 'jspdf';
 import { Router } from '@angular/router';
 import { VisitDataService } from '../services/visit-data.service';
 import { HttpClient, HttpClientModule } from '@angular/common/http'; // Add this import
+import { distinctUntilChanged } from 'rxjs';
 
 
 @Component({
@@ -87,6 +88,7 @@ export class VolumeCalculationComponent implements OnInit {
   }
   calcState = 0;
   ngOnInit(): void {
+    this.setupResidualActivitySync();
     this.loadFormData();
     this.volumeForm.get('vialTime')?.valueChanges.subscribe((value) => {
       if (value) {
@@ -356,6 +358,26 @@ export class VolumeCalculationComponent implements OnInit {
         window.open(pdfURL, '_blank');
       });
     }
+  }
+  private setupResidualActivitySync() {
+    this.setupTwoWaySync('rac', 'racUci', 37);
+  }
+  private setupTwoWaySync(kbqField: string, uciField: string, conversionFactor: number) {
+    this.volumeForm.get(kbqField)?.valueChanges.pipe(distinctUntilChanged()).subscribe(value => {
+      const kbqValue = parseFloat(value);
+      if (!isNaN(kbqValue)) {
+        const uciValue = (kbqValue / conversionFactor).toFixed(2);
+        this.volumeForm.patchValue({ [uciField]: uciValue }, { emitEvent: false });
+      }
+    });
+  
+    this.volumeForm.get(uciField)?.valueChanges.pipe(distinctUntilChanged()).subscribe(value => {
+      const uciValue = parseFloat(value);
+      if (!isNaN(uciValue)) {
+        const kbqValue = (uciValue * conversionFactor).toFixed(2);
+        this.volumeForm.patchValue({ [kbqField]: kbqValue }, { emitEvent: false });
+      }
+    });
   }
   loadData() {
     const patientId = this.volumeForm.get('subjectId')?.value;
