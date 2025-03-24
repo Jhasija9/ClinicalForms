@@ -1,0 +1,110 @@
+<!-- large-label-attest-data.component.html -->
+<div class="header">
+  <img src="assets/images/logo.png" alt="United Theranostics">
+  <h1>Upcoming Infusions</h1>
+  <div style="width: 200px;"></div>
+</div>
+<div class="label-container">
+  <div class="image-section">
+    <img [src]="labelImageUrl" 
+         alt="Label Image" 
+         (error)="handleImageError($event)"
+         *ngIf="labelImageUrl"
+         class="label-image">
+</div>
+    <form [formGroup]="labelForm">
+      <div class="grid-container">
+        <!-- Left Column -->
+        <div class="field-group">
+          <div class="field-row">
+            <input type="checkbox" formControlName="studyNameChecked">
+            <div class="field-content">
+              <label class="field-label">Study Name</label>
+              <input type="text" formControlName="studyName">
+            </div>
+          </div>
+  
+          <div class="field-row">
+            <input type="checkbox" formControlName="subjectIdChecked">
+            <div class="field-content">
+              <label class="field-label">Subject ID</label>
+              <input type="text" formControlName="subjectId">
+            </div>
+          </div>
+  
+          <div class="field-row">
+            <input type="checkbox" formControlName="lotNumberChecked">
+            <div class="field-content">
+              <label class="field-label">Lot Number</label>
+              <input type="text" formControlName="lotNumber">
+            </div>
+          </div>
+  
+          <div class="field-row">
+            <input type="checkbox" formControlName="dispAmtChecked">
+            <div class="field-content">
+              <label class="field-label">Disp. Amt (mCi)</label>
+              <input type="text" formControlName="dispAmt">
+            </div>
+          </div>
+        </div>
+  
+        <!-- Middle Column -->
+        <div class="field-group">
+          <div class="field-row">
+            <input type="checkbox" formControlName="productChecked">
+            <div class="field-content">
+              <label class="field-label">Product</label>
+              <input type="text" formControlName="product">
+            </div>
+          </div>
+  
+          <div class="field-row">
+            <input type="checkbox" formControlName="manufacturerChecked">
+            <div class="field-content">
+              <label class="field-label">Manufacturer</label>
+              <input type="text" formControlName="manufacturer">
+            </div>
+          </div>
+  
+          <div class="field-row">
+            <input type="checkbox" formControlName="volumeChecked">
+            <div class="field-content">
+              <label class="field-label">Volume (mL)</label>
+              <input type="text" formControlName="volume">
+            </div>
+          </div>
+        </div>
+  
+        <!-- Right Column -->
+        <div class="field-group">
+          <div class="field-row">
+            <input type="checkbox" formControlName="radioNuclideChecked">
+            <div class="field-content">
+              <label class="field-label">Radio Nuclide</label>
+              <input type="text" formControlName="radioNuclide">
+            </div>
+          </div>
+  
+          <div class="field-row">
+            <input type="checkbox" formControlName="rxNumberChecked">
+            <div class="field-content">
+              <label class="field-label">Rx #</label>
+              <input type="text" formControlName="rxNumber">
+            </div>
+          </div>
+        </div>
+      </div>
+  
+      <div class="attest-section">
+        <label class="attest-label">
+            <input type="checkbox" 
+            [checked]="attestCheckbox" 
+            (change)="onAttestCheckboxChange($event)">          By clicking on box next to each item I attest that it matches the information on the large label
+        </label>
+        <button class="attest-button" [disabled]="!allChecked" (click)="onAttest()">
+          Attest
+        </button>
+      </div>
+    </form>
+  </div>
