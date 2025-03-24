@@ -29,6 +29,8 @@ export class SubjectIdComponent implements OnInit, OnDestroy {
   subjectIdFromLabel: string = ''; // Add this property declaration
   patientRecords: any[] = []; // To store the records from API
   selectedPatientRecord: PatientRecord | null = null;
+  showMessage = false;
+  successMessage = '';
   matchStatus: 'matches' | 'noMatches' | null = null;  // To store selected patient
 
 
@@ -206,10 +208,24 @@ export class SubjectIdComponent implements OnInit, OnDestroy {
       this.visitDataService.updateAttestation(rxNumber, formValues).subscribe({
         next: (response) => {
           console.log('Attestation updated successfully', response);
-          this.router.navigate(['/next-page']);
+          // this.router.navigate(['/next-page']);
+          this.successMessage = 'Subject ID verified successfully';
+          this.showMessage = true;
+          
+          // Hide message and navigate after 2 seconds
+          setTimeout(() => {
+            this.showMessage = false;
+            this.router.navigate(['/next-page']);
+          }, 2000);
         },
         error: (error) => {
           console.error('Error updating attestation:', error);
+          this.successMessage = 'Error verifying Subject ID';
+          this.showMessage = true;
+          
+          setTimeout(() => {
+            this.showMessage = false;
+          }, 2000);
         }
       });
     }

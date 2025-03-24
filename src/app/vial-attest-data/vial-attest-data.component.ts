@@ -17,6 +17,7 @@ export class VialAttestDataComponent implements OnInit {
   vialForm: FormGroup;
   allChecked = false;
   attestCheckbox = false;
+  vialImageUrl: string | null = null;
   private subscription: Subscription = new Subscription();
 
   constructor(
@@ -56,6 +57,25 @@ export class VialAttestDataComponent implements OnInit {
   }
 
   ngOnInit() {
+
+    const rxNumber = this.visitDataService.RX;
+  console.log('Current RX:', rxNumber);
+  
+  if (rxNumber) {
+    // First get the data with pre-signed URLs
+    this.subscription.add(
+      this.visitDataService.getVialDataByRx(rxNumber).subscribe(
+        data => {
+          console.log('API Response with pre-signed URLs:', data);
+          console.log('Setting label image URL to:', data.vial_image_url);
+          // Make sure to set the image URL before updating the form
+          this.vialImageUrl = data.vial_image_url;
+          this.visitDataService.setSelectedRxData(data);
+        },
+        error => console.error('API Error:', error)
+      )
+    );
+  }
     this.visitDataService.selectedRxData$.subscribe(data => {
       if (data) {
         console.log('Received data in Vial:', data);

@@ -103,3 +103,78 @@
     border-radius: 4px;
     width: 100%;
   }
+  .vial-container {
+    padding: 20px;
+    margin: 15px 0;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .image-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 10px 0;
+    min-height: 200px; /* Minimum height for the container */
+  }
+  
+  .label-image {
+    max-width: 100%;
+    height: auto;
+    border-radius: 4px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+    transition: transform 0.2s ease;
+  }
+  
+  /* Optional: Add hover effect */
+  .label-image:hover {
+    transform: scale(1.02);
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .vial-container {
+      padding: 10px;
+    }
+    
+    .image-section {
+      min-height: 150px;
+    }
+  }
+  .content-wrapper {
+    display: flex;
+    gap: 20px;
+    padding: 20px;
+  }
+  
+  .form-section {
+    flex: 1;
+    min-width: 60%; /* Form takes up more space */
+  }
+  
+  .image-section {
+    flex: 0 0 35%; /* Image takes up fixed 35% width */
+    padding: 20px;
+  }
+  
+  .label-image {
+    width: 100%;
+  max-height: 400px; /* Adjust this value to control image height */
+  object-fit: contain; /* Maintains aspect ratio */
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Keep your existing CSS for grid-container, field-groups, etc. */
+  
+  @media (max-width: 768px) {
+    .content-wrapper {
+      flex-direction: column;
+    }
+    
+    .image-section {
+      flex: 1;
+      width: 100%;
+    }
+  }

@@ -4,144 +4,143 @@
   <h1>Upcoming Infusions</h1>
   <div style="width: 200px;"></div>
 </div>
-<div class="label-container">
-    <form [formGroup]="vialForm">
-      <div class="grid-container">
-        <!-- Left Column -->
-        <div class="field-group">
-          <!-- Form Label Dropdown -->
-          
-  
-          <div class="field-row">
-            <input type="checkbox" formControlName="studyNameChecked">
-            <div class="field-content">
-              <label class="field-label">Study Name</label>
-              <input type="text" formControlName="studyName" readonly>
+
+<div class="content-wrapper">
+  <!-- Left side - Form -->
+  <div class="form-section">
+    <div class="label-container">
+      <form [formGroup]="vialForm">
+        <div class="grid-container">
+          <!-- Left Column -->
+          <div class="field-group">
+            <div class="field-row">
+              <input type="checkbox" formControlName="studyNameChecked">
+              <div class="field-content">
+                <label class="field-label">Study Name</label>
+                <input type="text" formControlName="studyName" readonly>
+              </div>
             </div>
-          </div>
-  
-          <div class="field-row">
-            <input type="checkbox" formControlName="subjectIdChecked">
-            <div class="field-content">
-              <label class="field-label">Subject ID</label>
-              <input type="text" formControlName="subjectId" readonly>
+
+            <div class="field-row">
+              <input type="checkbox" formControlName="subjectIdChecked">
+              <div class="field-content">
+                <label class="field-label">Subject ID</label>
+                <input type="text" formControlName="subjectId" readonly>
+              </div>
             </div>
-          </div>
-  
-          <div class="field-row">
-            <input type="checkbox" formControlName="lotNumberChecked">
-            <div class="field-content">
-              <label class="field-label">Lot Number</label>
-              <input type="text" formControlName="lotNumber" readonly>
+
+            <div class="field-row">
+              <input type="checkbox" formControlName="lotNumberChecked">
+              <div class="field-content">
+                <label class="field-label">Lot Number</label>
+                <input type="text" formControlName="lotNumber" readonly>
+              </div>
+            </div>
+
+            <div class="field-row">
+              <input type="checkbox" formControlName="dispAmtChecked">
+              <div class="field-content">
+                <label class="field-label">Disp. Amt (mCi)</label>
+                <input type="text" formControlName="dispAmt" readonly>
+              </div>
             </div>
           </div>
 
-          <div class="field-row">
-            <input type="checkbox" formControlName="dispAmtChecked">
-            <div class="field-content">
-              <label class="field-label">Disp. Amt (mCi)</label>
-              <input type="text" formControlName="dispAmt" readonly>
+          <!-- Middle Column -->
+          <div class="field-group">
+            <div class="field-row">
+              <input type="checkbox" formControlName="productChecked">
+              <div class="field-content">
+                <label class="field-label">Product</label>
+                <input type="text" formControlName="product" readonly>
+              </div>
+            </div>
+
+            <div class="field-row">
+              <input type="checkbox" formControlName="manufacturerChecked">
+              <div class="field-content">
+                <label class="field-label">Manufacturer</label>
+                <input type="text" formControlName="manufacturer" readonly>
+              </div>
+            </div>
+
+            <div class="field-row">
+              <input type="checkbox" formControlName="volumeChecked">
+              <div class="field-content">
+                <label class="field-label">Volume (mL)</label>
+                <input type="text" formControlName="volume" readonly>
+              </div>
+            </div>
+
+            <div class="field-row">
+              <input type="checkbox" formControlName="tocChecked">
+              <div class="field-content">
+                <label class="field-label">TOC</label>
+                <input type="text" formControlName="toc" readonly>
+              </div>
             </div>
           </div>
-          
+
+          <!-- Right Column -->
+          <div class="field-group">
+            <div class="field-row">
+              <input type="checkbox" formControlName="radioNuclideChecked">
+              <div class="field-content">
+                <label class="field-label">Radio Nuclide</label>
+                <input type="text" formControlName="radioNuclide" readonly>
+              </div>
+            </div>
+
+            <div class="field-row">
+              <input type="checkbox" formControlName="rxNumberChecked">
+              <div class="field-content">
+                <label class="field-label">Rx #</label>
+                <input type="text" formControlName="rxNumber" class="editable-field">
+              </div>
+            </div>
+
+            <div class="field-row">
+              <input type="checkbox" formControlName="rocChecked">
+              <div class="field-content">
+                <label class="field-label">RAC</label>
+                <input type="text" formControlName="roc" readonly>
+              </div>
+            </div>
+
+            <div class="field-row">
+              <input type="checkbox" formControlName="formLabelChecked">
+              <div class="field-content">
+                <label class="field-label">Form Label</label>
+                <select formControlName="formLabel" class="editable-field">
+                  <option value="vial">Vial</option>
+                  <option value="syringe">Syringe</option>
+                  <option value="liquid">Liquid</option>
+                </select>
+              </div>
+            </div>
+          </div>
         </div>
-        
-  
-        <!-- Middle Column -->
-        <div class="field-group">
-          <div class="field-row">
-            <input type="checkbox" formControlName="productChecked">
-            <div class="field-content">
-              <label class="field-label">Product</label>
-              <input type="text" formControlName="product" readonly>
-            </div>
-          </div>
-  
-          <div class="field-row">
-            <input type="checkbox" formControlName="manufacturerChecked">
-            <div class="field-content">
-              <label class="field-label">Manufacturer</label>
-              <input type="text" formControlName="manufacturer" readonly>
-            </div>
-          </div>
-  
-          <div class="field-row">
-            <input type="checkbox" formControlName="volumeChecked">
-            <div class="field-content">
-              <label class="field-label">Volume (mL)</label>
-              <input type="text" formControlName="volume" readonly>
-            </div>
-          </div>
-          <div class="field-row">
-            <input type="checkbox" formControlName="tocChecked">
-            <div class="field-content">
-              <label class="field-label">TOC</label>
-              <input type="text" formControlName="toc" readonly>
-            </div>
-          </div>
-  
-          
+
+        <div class="attest-section">
+          <label class="attest-label">
+            <input type="checkbox" 
+                   [checked]="attestCheckbox" 
+                   (change)="onAttestCheckboxChange($event)">
+            By clicking on box next to each item I attest that it matches the information on the vial
+          </label>
+          <button class="attest-button" [disabled]="!allChecked" (click)="onAttest()">
+            Attest
+          </button>
         </div>
-  
-        <!-- Right Column -->
-        <div class="field-group">
-          <div class="field-row">
-            <input type="checkbox" formControlName="radioNuclideChecked">
-            <div class="field-content">
-              <label class="field-label">Radio Nuclide</label>
-              <input type="text" formControlName="radioNuclide" readonly>
-            </div>
-          </div>
-  
-          <div class="field-row">
-            <input type="checkbox" formControlName="rxNumberChecked">
-            <div class="field-content">
-              <label class="field-label">Rx #</label>
-              <input type="text" formControlName="rxNumber" class="editable-field">
-            </div>
-          </div>
-          
-  
-          <div class="field-row">
-            <input type="checkbox" formControlName="rocChecked">
-            <div class="field-content">
-              <label class="field-label">RAC</label>
-              <input type="text" formControlName="roc" readonly>
-            </div>
-          </div>
-          <div class="field-row">
-            <input type="checkbox" formControlName="formLabelChecked">
-            <div class="field-content">
-              <label class="field-label">Form Label</label>
-              <select formControlName="formLabel" class="editable-field">
-                <option value="vial">Vial</option>
-                <option value="syringe">Syringe</option>
-                <option value="liquid">Liquid</option>
-              </select>
-            </div>
-          </div>
-          
-          
-  
-          
-        </div>
-      </div>
-      
-
-
-
-      
-  
-      <div class="attest-section">
-        <label class="attest-label">
-          <input type="checkbox" 
-                 [checked]="attestCheckbox" 
-                 (change)="onAttestCheckboxChange($event)">
-          By clicking on box next to each item I attest that it matches the information on the vial
-        </label>
-        <button class="attest-button" [disabled]="!allChecked" (click)="onAttest()">
-          Attest
-        </button>
-      </div>
-    </form>
+      </form>
+    </div>
   </div>
+
+  <!-- Right side - Image -->
+  <div class="image-section">
+    <img [src]="vialImageUrl" 
+         alt="Vial Image" 
+         *ngIf="vialImageUrl"
+         class="label-image">
+  </div>
+</div>

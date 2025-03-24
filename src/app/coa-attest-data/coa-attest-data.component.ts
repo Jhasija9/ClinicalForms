@@ -18,6 +18,9 @@ export class CoaAttestDataComponent implements OnInit {
   allChecked = false;
   previousData: any;
   attestCheckbox = false;
+  coaImageUrl: string | null = null;
+  
+  
   private subscription: Subscription = new Subscription();  // Add this line
 
 
@@ -56,6 +59,25 @@ export class CoaAttestDataComponent implements OnInit {
   }
 
   ngOnInit() {
+
+    const rxNumber = this.visitDataService.RX;
+  console.log('Current RX:', rxNumber);
+  
+  if (rxNumber) {
+    // First get the data with pre-signed URLs
+    this.subscription.add(
+      this.visitDataService.getVialDataByRx(rxNumber).subscribe(
+        data => {
+          console.log('API Response with pre-signed URLs:', data);
+          console.log('Setting label image URL to:', data.coa_image_url);
+          // Make sure to set the image URL before updating the form
+          this.coaImageUrl = data.coa_image_url;
+          this.visitDataService.setSelectedRxData(data);
+        },
+        error => console.error('API Error:', error)
+      )
+    );
+  }
     this.visitDataService.selectedRxData$.subscribe(data => {
       if (data) {
         console.log('Received data in COA:', data);
