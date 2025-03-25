@@ -44,3 +44,34 @@
     margin: 10px 40px 0px 40px;
 }
   
+/* visit-data.component.css */
+.date-filter {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  align-items: normal;
+}
+
+.mat-form-field {
+  width: 200px;
+}
+
+.clear-button {
+  height: 56px; /* Match Material form field height */
+  padding: 0 16px;
+  background-color: #4e4b4b;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px; /* Match Material input font size */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.clear-button:hover {
+  background-color: #352929;
+}
+
+/* ... rest of your existing styles ... */

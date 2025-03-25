@@ -1,8 +1,23 @@
 <div class="header">
   <img src="assets/images/logo.png" alt="United Theranostics">
   <h1>Upcoming Infusions</h1>
-  <div style="width: 200px;"></div>
+  <div class="date-filter" >
+    <mat-form-field appearance="fill">
+      <mat-label>Choose a date</mat-label>
+      <input matInput [matDatepicker]="picker" 
+             (dateChange)="onDateSelected($event)">
+      <mat-datepicker-toggle matIconSuffix [for]="picker">
+        <mat-icon matDatepickerToggleIcon>calendar_today</mat-icon>
+      </mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
+    <button class="clear-button" *ngIf="selectedDate" (click)="clearDateFilter()">
+      Show All
+    </button>
+  </div>
 </div>
+  <!-- <div style="width: 200px;"></div>
+</div> -->
 
 <div class="table-container">
     <table class="visit-data-table">
@@ -17,7 +32,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let row of visitData">
+        <tr *ngFor="let row of filteredVisitData">
           <td>{{row.first_name}}</td>
           <td>{{row.last_name}}</td>
           <td>{{row.dob.split("T")[0]}}</td>
