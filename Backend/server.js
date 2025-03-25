@@ -213,7 +213,213 @@ app.get('/api/load-dos-details/:patientId/:DOS', (req, res) => {
 
 
 
+// const PORT = 3001;
+// app.listen(PORT, () => {
+//   console.log(`Server running on http://localhost:${PORT}`);
+// });
+
+
+
+
+
+const { S3Client, GetObjectCommand } = require("@aws-sdk/client-s3");
+const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
+const express = require("express");
+const mysql = require("mysql2");
+const cors = require("cors");
+
+const app = express();
+
+app.use(cors());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+app.use((req, res, next) => {
+  console.log("Request Body:", req.body);
+  console.log("Request Params:", req.params);
+  next();
+});
+
+// Create a basic MySQL connection (no pool, no .promise())
+const db = mysql.createConnection({
+  host: "localhost",
+  user: "root",
+  password: "Kedarkantha4@",
+  database: "unithera",
+  port: 3306,
+});
+
+db.connect((err) => {
+  if (err) {
+    console.error("MySQL connection error:", err);
+  } else {
+    console.log("Connected to MySQL database (createConnection) ✅");
+  }
+});
+
+// Utility to convert callback-based db.query to Promise
+function queryAsync(sql, params = []) {
+  return new Promise((resolve, reject) => {
+    db.query(sql, params, (err, results) => {
+      if (err) return reject(err);
+      resolve(results);
+    });
+  });
+}
+
+// Generate S3 pre-signed URL
+async function generatePresignedUrl(s3Url) {
+  try {
+    const path = s3Url.replace("s3://unithera-dev-raminventory/", "");
+    const s3Client = new S3Client({
+      region: "us-east-1",
+      credentials: {
+        accessKeyId: "AKIASODIIJ7ROCGS3FPB",
+        secretAccessKey: "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",
+      },
+    });
+
+    const command = new GetObjectCommand({
+      Bucket: "unithera-dev-raminventory",
+      Key: path,
+    });
+
+    return await getSignedUrl(s3Client, command, { expiresIn: 3600 });
+  } catch (error) {
+    console.error("Error generating presigned URL:", error);
+    throw error;
+  }
+}
+
+// GET vial by rxNumber with presigned URLs
+app.get("/api/vial-data/:rxNumber", async (req, res) => {
+  try {
+    const { rxNumber } = req.params;
+    const results = await queryAsync("SELECT * FROM vial WHERE rx_number = ?", [rxNumber]);
+
+    if (!results || results.length === 0) {
+      return res.status(404).json({ error: "Vial data not found" });
+    }
+
+    const data = results[0];
+
+    if (data.label_image_url) {
+      data.label_image_url = await generatePresignedUrl(data.label_image_url);
+    }
+    if (data.coa_image_url) {
+      data.coa_image_url = await generatePresignedUrl(data.coa_image_url);
+    }
+    if (data.vial_image_url) {
+      data.vial_image_url = await generatePresignedUrl(data.vial_image_url);
+    }
+
+    res.json(data);
+  } catch (err) {
+    console.error("Error:", err);
+    res.status(500).json({ error: "Error fetching vial data", details: err.message });
+  }
+});
+
+// GET all vials
+app.get("/api/vial-data", async (req, res) => {
+  try {
+    const results = await queryAsync("SELECT * FROM vial");
+    res.json(results);
+  } catch (err) {
+    console.error("Error fetching vials:", err);
+    res.status(500).json({ error: "Error fetching vial data" });
+  }
+});
+
+// GET form data
+app.get("/api/form-data", async (req, res) => {
+  try {
+    const results = await queryAsync("SELECT * FROM infusion_visit_data");
+    res.json(results);
+  } catch (err) {
+    console.error("Error fetching form data:", err);
+    res.status(500).json({ error: "Error fetching form data" });
+  }
+});
+
+// GET study data
+app.get("/api/study-data", async (req, res) => {
+  try {
+    const results = await queryAsync("SELECT * FROM study");
+    res.json(results);
+  } catch (err) {
+    console.error("Error fetching study data:", err);
+    res.status(500).json({ error: "Error fetching study data" });
+  }
+});
+
+// PUT update attestation
+app.put("/api/update-attestation/:rxNumber", async (req, res) => {
+  try {
+    const { rxNumber } = req.params;
+    const updateData = req.body;
+
+    if (!updateData) {
+      return res.status(400).json({ error: "No update data provided", receivedData: req.body });
+    }
+
+    const formattedDate = updateData.calibration_date
+      ? new Date(updateData.calibration_date).toISOString().slice(0, 19).replace("T", " ")
+      : null;
+
+    const query = `
+      UPDATE vial
+      SET 
+        Radiopharmaceutical = ?,
+        patient_id = ?,
+        actual_amount = ?,
+        lot_number = ?,
+        Manufacturer = ?,
+        volume = ?,
+        product = ?,
+        radio_nuclide = ?,
+        form_label = ?,
+        calibration_date = ?,
+        radioactivity_concentration = ?,
+        status = ?
+      WHERE rx_number = ?
+    `;
+
+    const values = [
+      updateData.Radiopharmaceutical || null,
+      updateData.patient_id || null,
+      updateData.actual_amount || null,
+      updateData.lot_number || null,
+      updateData.Manufacturer || null,
+      updateData.volume || null,
+      updateData.product || null,
+      updateData.radio_nuclide || null,
+      updateData.form_label || null,
+      formattedDate,
+      updateData.radioactivity_concentration || null,
+      updateData.status || null,
+      rxNumber,
+    ];
+
+    const result = await queryAsync(query, values);
+
+    res.json({
+      success: true,
+      message: "Attestation updated successfully",
+      result,
+    });
+  } catch (error) {
+    console.error("Error updating attestation:", error);
+    res.status(500).json({
+      error: "Failed to update attestation",
+      details: error.message,
+      receivedData: req.body,
+    });
+  }
+});
+
+// Start the server
 const PORT = 3001;
 app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
+  console.log(`Server is running on port ${PORT}`);
 });
