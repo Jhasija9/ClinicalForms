@@ -1,0 +1,41 @@
+<!-- nuclear-med.component.html -->
+<div class="header">
+    <img src="assets/images/logo.png" alt="United Theranostics">
+    <h1>Upcoming Infusions</h1>
+    <div class="date-filter">
+      <!-- Empty div to maintain the three-column layout -->
+    </div>
+</div>
+
+<div class="table-container">
+    <table class="visit-data-table">
+        <thead>
+            <tr>
+                <th></th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>DOB</th>
+                <th>Subject ID</th>
+                <th>Visit</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let row of orders">
+                <td><input type="checkbox" 
+                          (change)="onRowSelect(row, $event)" 
+                          [checked]="isSelected(row)"></td>
+                <td>{{row.first_name}}</td>
+                <td>{{row.last_name}}</td>
+                <td>{{row.dob.split("T")[0]}}</td>
+                <td>{{row.patient_id}}</td>
+                <td>{{row.visit_name}}</td>
+                <td>{{row.status_name}}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="footer">
+    <button (click)="onOrderSent()" [disabled]="!selectedRows.length">Order Sent</button>
+</div>

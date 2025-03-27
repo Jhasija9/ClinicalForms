@@ -1,0 +1,48 @@
+<!-- ordering.component.html -->
+<div class="header">
+    <img src="assets/images/logo.png" alt="United Theranostics">
+    <h1>Upcoming Infusions</h1>
+    <div class="date-filter">
+      <mat-form-field appearance="fill">
+        <mat-label>Choose a date</mat-label>
+        <input matInput 
+               [matDatepicker]="picker" 
+               [value]="selectedDate"
+               (dateChange)="onDateSelected($event)">
+        <mat-datepicker-toggle matIconSuffix [for]="picker">
+          <mat-icon matDatepickerToggleIcon>calendar_today</mat-icon>
+        </mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
+      <button class="clear-button" (click)="clearDateFilter()">
+        Show All
+      </button>
+    </div>
+  </div>
+  
+  <div class="table-container">
+    <table class="visit-data-table">
+      <thead>
+        <tr>
+          <th>First Name</th>
+          <th>Last Name</th>
+          <th>DOB</th>
+          <th>Subject ID</th>
+          <th>Visit</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let row of filteredVisitData"
+        (click)="onRowClick(row)"
+            class="clickable-row">
+          <td>{{row.first_name}}</td>
+          <td>{{row.last_name}}</td>
+          <td>{{row.dob.split("T")[0]}}</td>
+          <td>{{row.patient_id}}</td>
+          <td>{{row.visit_name}}</td>
+          <td>{{row.status_name || ''}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>

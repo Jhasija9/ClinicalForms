@@ -459,7 +459,56 @@ export class WrittenDirectiveComponent implements OnInit {
         if (Object.keys(response).length === 0) {
         } else {
           console.log('response :>> ', response);
-          this.wdForm.patchValue(response);
+          const formatDate = (dateString: string) => {
+            if (!dateString) return '';
+            const date = new Date(dateString);
+            return date.toISOString().split('T')[0]; // This will give yyyy-MM-dd format
+          };
+
+          // Parse dates from response
+          const vialDate = formatDate(response.vial_activity_date);
+          const syringeDate = formatDate(response.syringe_activity_date);
+
+          // Format time from "HH:MM:SS" to "HH:MM"
+          const formatTime = (timeString: string) => {
+            if (!timeString) return '';
+            return timeString.substring(0, 5); // Take only HH:MM part
+          };
+
+
+
+          this.wdForm.patchValue({manufacturer: response.manufacturer,
+            containerId: response.containerId,
+            lotBatch: response.lotBatch,
+            form: response.form,
+            volume: response.volume,
+            quality: response.quality,
+            radiopharmaceutical: response.study_name,
+            vialActivityKbq: response.vial_activity,
+            vialActivityUci: (response.vial_activity / 37).toFixed(2),
+            impDate: vialDate,  // Changed from vial_activity_date
+            impTime: response.vial_activity_time,         
+
+            // Section 4 (DOSE DISPENSING)
+            syringeId: response.syringeId,
+            syringeVolume: response.syringeVolume,
+            syringeActivityKbq: response.syringe_activity,
+            syringeActivityUci: (response.syringe_activity / 37).toFixed(2),
+            syringeDate: syringeDate,  // Changed from syringe_activity_date
+            syringeTime: response.syringe_activity_time,       
+
+            // Other fields
+            timeCalibration: response.timeCalibration,
+            visit: response.visit,
+            weightDayOfDose: response.weightDayOfDose,
+            prescribedDosage: response.prescribedDosage,
+            prescribedDosageUci: response.prescribedDosageUci});
+            
+            console.log('Formatted dates/times:', {
+              vialDate: formatDate(response.vial_activity_date),
+              vialTime: formatTime(response.vial_activity_time),
+              syringeDate: formatDate(response.syringe_activity_date),
+              syringeTime: formatTime(response.syringe_activity_time)});
         }
       },
       error: (error) => {

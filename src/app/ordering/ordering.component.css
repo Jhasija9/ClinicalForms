@@ -1,0 +1,80 @@
+/* ordering.component.css */
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px;
+  }
+  
+  .header img {
+    height: 40px;
+  }
+  
+  .header h1 {
+    margin: 0;
+    font-size: 24px;
+  }
+  
+  .date-filter {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .mat-form-field {
+    width: 200px;
+  }
+  
+  .clear-button {
+    height: 56px;
+    padding: 0 16px;
+    background-color: #111010;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .clear-button:hover {
+    background-color: #d32f2f;
+  }
+  
+  .table-container {
+    margin: 20px;
+    overflow-x: auto;
+  }
+  
+  .visit-data-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .visit-data-table th,
+  .visit-data-table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .visit-data-table th {
+    background-color: #f5f5f5;
+    font-weight: bold;
+  }
+  
+  img {
+    height: 100px;
+    margin: 10px 40px 0px 40px;
+  }
+  /* ordering.component.css */
+  .clickable-row {
+    cursor: pointer;
+  }
+  
+  .clickable-row:hover {
+    background-color: #f5f5f5;
+    transition: background-color 0.3s;
+  }

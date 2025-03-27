@@ -1,0 +1,128 @@
+<!-- form-ordering.component.html -->
+<div class="wd-container">
+    <div id="pdfContent">
+      <!-- Header Section -->
+      <div class="header">
+        <img src="/assets/images/logo.png" alt="United Theranostics" />
+        <h1>Ordering Form</h1>
+        <div class="form-info">
+          <p>FPI-2265-202</p>
+          <p>Site: Chesapeake</p>
+          <p>V.1.1 (11 Feb 2025)</p>
+        </div>
+      </div>
+  
+      <!-- Form Section -->
+      <form [formGroup]="orderForm" id="orderForm">
+        <!-- Section 1: Patient Identification -->
+        <div class="section">
+          <div class="section-header">1. PATIENT IDENTIFICATION</div>
+  
+          <div class="form-row-container" style="display: flex; justify-content: space-between">
+            <div class="form-left">
+              <div class="form-row">
+                <label>Patient Name:</label>
+                <input formControlName="patientName" readonly class="readonly-field" />
+              </div>
+              <div class="form-row">
+                <label>Subject ID:</label>
+                <input formControlName="subjectId"  readonly class="readonly-field" />
+              </div>
+              <div class="form-row">
+                <label>DOB:</label>
+                <input formControlName="dob" type="date" readonly class="readonly-field" />
+              </div>
+            </div>
+  
+            <div class="form-right">
+              <div class="form-row">
+                <label>Protocol #:</label>
+                <span>Version 2.0 (19DEC2024)</span>
+              </div>
+              <div class="form-row">
+                <label>Arms:</label>
+                <div class="arms">
+                  <div>
+                    <input type="checkbox" formControlName="arm1"  /> Arm 1: 50 kBq/kg
+                  </div>
+                  <div>
+                    <input type="checkbox" formControlName="arm2"  /> Arm 2: 75 kBq/kg
+                  </div>
+                  <div>
+                    <input type="checkbox" formControlName="arm3"   /> Arm 3: 100 kBq/kg
+                  </div>
+                </div>
+              </div>
+              <div class="form-row">
+                <label>Screening weight:</label>
+                <input formControlName="screeningWeight" type="number" readonly class="readonly-field" /> kg
+              </div>
+              <div class="form-row">
+                <label>Assigned dose:</label>
+                <input formControlName="assignedDose" type="number" readonly class="readonly-field" /> kBq (1/37 →)
+                <input formControlName="assignedDoseMCi" type="number" readonly class="readonly-field" /> μCi
+              </div>
+            </div>
+          </div>
+        </div>
+  
+        <!-- Section 2: Dose Ordering -->
+        <div class="section">
+          <div class="section-header">2. DOSE ORDERING</div>
+          
+          <div class="form-row-container" style="display: flex; justify-content: space-between;">
+            <div class="form-left">
+              <div class="form-row">
+                <span class="number">1.</span>
+                <label>Radiopharmaceutical:</label>
+                <input type="text" formControlName="radiopharmaceutical" readonly class="readonly-field">
+              </div>
+        
+              <div class="form-row">
+                <span class="number">2.</span>
+                <label>Prescribed Dosage:</label>
+                <input type="number" formControlName="prescribedDosage">
+                <span>kBq</span>
+                <input type="number" formControlName="prescribedDosageUci">
+                <span>μCi</span>
+              </div>
+        
+              <div class="form-row">
+                <span class="number">3.</span>
+                <label>Route of Administration:</label>
+                <span>IV</span>
+              </div>
+        
+              <div class="form-row">
+                <span class="number">4.</span>
+                <label>Proposed Administration Date:</label>
+                <input type="date" formControlName="proposed_administration_date" readonly class="readonly-field">
+                <label class="time-label">Time:</label>
+                <input type="time" formControlName="proposed_administration_time" readonly class="readonly-field">
+              </div>
+        
+              <div class="form-row">
+                <span class="number">5.</span>
+                <label>Authorized User:</label>
+                <input type="text" formControlName="authorizedUser" readonly class="readonly-field">
+              </div>
+        
+              <div class="form-row">
+                <span class="number">6.</span>
+                <label>Authorized User signature:</label>
+                <input type="text" formControlName="physicianSignature">
+                <label>Date:</label>
+                <input type="date" formControlName="signatureDate">
+                <label>Time:</label>
+                <input type="time" formControlName="signatureTime">
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="button-container">
+      <button (click)="saveData()" class="save-button">Save</button>
+      <button (click)="generatePDF()" class="pdf-button">Generate PDF</button>
+    </div>
+  </div>

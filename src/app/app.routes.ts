@@ -9,6 +9,9 @@ import { LargeLabelAttestDataComponent } from './large-label-attest-data/large-l
 import { CoaAttestDataComponent } from './coa-attest-data/coa-attest-data.component';
 import { VialAttestDataComponent } from './vial-attest-data/vial-attest-data.component';
 import { SubjectIdComponent } from './subject-id/subject-id.component';
+import { OrderingComponent } from './ordering/ordering.component';
+import { FormOrderingComponent } from './form-ordering/form-ordering.component';
+import { NuclearMedComponent } from './nuclear-med/nuclear-med.component';
 
 export const routes: Routes = [
   { path: 'visit-data', component: VisitDataComponent },
@@ -37,6 +40,9 @@ export const routes: Routes = [
       },
       { path: 'vial', component: VialAttestDataComponent },
       { path: 'subject-id', component: SubjectIdComponent },
+      {path:'ordering', component: OrderingComponent},
+      {path:'form-order', component: FormOrderingComponent},
+      {path:'nuclear-med', component: NuclearMedComponent}
 
 
     ];

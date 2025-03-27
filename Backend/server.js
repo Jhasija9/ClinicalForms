@@ -222,42 +222,6 @@ app.get('/api/load-dos-details/:patientId/:DOS', (req, res) => {
 
 
 
-const { S3Client, GetObjectCommand } = require("@aws-sdk/client-s3");
-const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
-const express = require("express");
-const mysql = require("mysql2");
-const cors = require("cors");
-
-const app = express();
-
-app.use(cors());
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-
-app.use((req, res, next) => {
-  console.log("Request Body:", req.body);
-  console.log("Request Params:", req.params);
-  next();
-});
-
-// Create a basic MySQL connection (no pool, no .promise())
-const db = mysql.createConnection({
-  host: "localhost",
-  user: "root",
-  password: "Kedarkantha4@",
-  database: "unithera",
-  port: 3306,
-});
-
-db.connect((err) => {
-  if (err) {
-    console.error("MySQL connection error:", err);
-  } else {
-    console.log("Connected to MySQL database (createConnection) ✅");
-  }
-});
-
-// Utility to convert callback-based db.query to Promise
 function queryAsync(sql, params = []) {
   return new Promise((resolve, reject) => {
     db.query(sql, params, (err, results) => {
@@ -332,13 +296,65 @@ app.get("/api/vial-data", async (req, res) => {
 });
 
 // GET form data
+// app.get("/api/form-data", async (req, res) => {
+//   try {
+//     const results = await queryAsync("SELECT * FROM infusion_visit_data");
+//     res.json(results);
+//   } catch (err) {
+//     console.error("Error fetching form data:", err);
+//     res.status(500).json({ error: "Error fetching form data" });
+//   }
+// });
 app.get("/api/form-data", async (req, res) => {
   try {
-    const results = await queryAsync("SELECT * FROM infusion_visit_data");
+    const sql = `
+      SELECT i.*, d.status_id, s.status_name 
+      FROM infusion_visit_data i 
+      LEFT JOIN dos_details d ON i.patient_id = d.patientId 
+      LEFT JOIN Status s ON d.status_id = s.id`;
+
+    const results = await queryAsync(sql);
     res.json(results);
   } catch (err) {
     console.error("Error fetching form data:", err);
     res.status(500).json({ error: "Error fetching form data" });
+  }
+});
+// Get only completed orders
+app.get("/api/nuclear-med-orders", async (req, res) => {
+  try {
+    const sql = `
+      SELECT i.*, d.status_id, s.status_name 
+      FROM infusion_visit_data i 
+      LEFT JOIN dos_details d ON i.patient_id = d.patientId 
+      LEFT JOIN Status s ON d.status_id = s.id
+      WHERE s.status_name IN ('completed', 'order_sent')`;  // Only get completed orders
+
+    const results = await queryAsync(sql);
+    res.json(results);
+  } catch (err) {
+    console.error("Error fetching nuclear med data:", err);
+    res.status(500).json({ error: "Error fetching data" });
+  }
+});
+app.post("/api/update-orders-sent", async (req, res) => {
+  try {
+    const { patientIds } = req.body;
+    
+    const sql = `
+      UPDATE Status 
+      SET status_name = 'order_sent' 
+      WHERE id IN (
+        SELECT status_id 
+        FROM dos_details 
+        WHERE patientId IN (?)
+      )`;
+    
+    await queryAsync(sql, [patientIds]);
+    res.json({ message: 'Orders updated successfully' });
+  } catch (err) {
+    console.error("Error updating orders:", err);
+    res.status(500).json({ error: "Error updating orders" });
   }
 });
 
@@ -417,9 +433,113 @@ app.put("/api/update-attestation/:rxNumber", async (req, res) => {
     });
   }
 });
+app.post('/api/save-dos-details', (req, res) => {
+  const data = req.body;
+  // ✅ Convert empty strings to NULL for DATE, TIME, and DECIMAL fields
+  function sanitize(value, defaultValue = null) {
+    return value === '' || value === undefined || value === null ? defaultValue : value;
+  }
 
-// Start the server
-const PORT = 3001;
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+  const checkSql = `SELECT id FROM dos_details WHERE patientId = ? AND DOS = ?`;
+  data.proposed_administration_date = data.proposed_administration_date.substring(0, 10)
+  db.query(checkSql, [data.subjectId, sanitize(data.proposed_administration_date, '1970-01-01')], (err, result) => {
+    if (err) {
+      console.error('🔴 MySQL Error:', err.sqlMessage);
+      return res.status(500).send({ error: err.sqlMessage });
+    }
+    console.log('object :>> ', data.proposed_administration_date );
+
+    if (result.length > 0) {
+      // ✅ If record exists, UPDATE
+      const updateSql = `
+        UPDATE dos_details SET
+          study_name = ?, visit = ?, weightDayOfDose = ?, dateCalibration = ?, timeCalibration = ?, 
+          rac = ?, racUci = ?, three_label_pictures = ?, fill_sec3_wd = ?, send_forms = ?, 
+          prescribedDosage = ?, prescribedDosageUci = ?, manufacturer = ?, containerId = ?, 
+          rx_batch = ?, lotBatch = ?, quality = ?, form = ?, volume = ?, 
+          vial_activity = ?, vial_activity_date = ?, vial_activity_time = ?, 
+          syringeId = ?, syringeVolume = ?, syringe_activity = ?, syringe_activity_date = ?, syringe_activity_time = ?,status_id = ?
+        WHERE patientId = ? AND DOS = ?`;
+
+      db.query(updateSql, [
+        sanitize(data.study_name), sanitize(data.visit), sanitize(data.weightDayOfDose),
+        sanitize(data.dateCalibration), sanitize(data.timeCalibration), sanitize(data.rac), sanitize(data.racUci),
+        data.three_label_pictures ? 1 : 0, data.fill_sec3_wd ? 1 : 0, data.send_forms ? 1 : 0,
+        sanitize(data.prescribedDosage), sanitize(data.prescribedDosageUci), sanitize(data.manufacturer),
+        sanitize(data.containerId), sanitize(data.rx_batch), sanitize(data.lotBatch), data.quality ? 1 : 0,
+        sanitize(data.form), sanitize(data.volume), sanitize(data.vial_activity), sanitize(data.vial_activity_date),
+        sanitize(data.vial_activity_time), sanitize(data.syringeId), sanitize(data.syringeVolume),
+        sanitize(data.syringe_activity), sanitize(data.syringe_activity_date), sanitize(data.syringe_activity_time),
+        sanitize(data.status_id),
+        data.subjectId, sanitize(data.proposed_administration_date.substring(0, 10), '1970-01-01')
+      ], (err, result) => {
+        if (err) {
+          console.error('🔴 MySQL Update Error:', err.sqlMessage);
+          return res.status(500).send({ error: err.sqlMessage });
+        }
+        res.send({ message: 'Data updated successfully' });
+      });
+
+    } else {
+      // ✅ If no record exists, INSERT new record
+      const insertSql = `
+        INSERT INTO dos_details (
+          patientId, DOS, study_name, visit, weightDayOfDose, dateCalibration, timeCalibration, 
+          rac, racUci, three_label_pictures, fill_sec3_wd, send_forms, 
+          prescribedDosage, prescribedDosageUci, manufacturer, containerId, 
+          rx_batch, lotBatch, quality, form, volume, 
+          vial_activity, vial_activity_date, vial_activity_time, 
+          syringeId, syringeVolume, syringe_activity, syringe_activity_date, syringe_activity_time,status_id
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+
+      db.query(insertSql, [
+        data.subjectId, sanitize(data.proposed_administration_date.substring(0, 10), '1970-01-01'), sanitize(data.study_name),
+        sanitize(data.visit), sanitize(data.weightDayOfDose), sanitize(data.dateCalibration),
+        sanitize(data.timeCalibration), sanitize(data.rac), sanitize(data.racUci),
+        data.three_label_pictures ? 1 : 0, data.fill_sec3_wd ? 1 : 0, data.send_forms ? 1 : 0,
+        sanitize(data.prescribedDosage), sanitize(data.prescribedDosageUci), sanitize(data.manufacturer),
+        sanitize(data.containerId), sanitize(data.rx_batch), sanitize(data.lotBatch), data.quality ? 1 : 0,
+        sanitize(data.form), sanitize(data.volume), sanitize(data.vial_activity), sanitize(data.vial_activity_date),
+        sanitize(data.vial_activity_time), sanitize(data.syringeId), sanitize(data.syringeVolume),
+        sanitize(data.syringe_activity), sanitize(data.syringe_activity_date), sanitize(data.syringe_activity_time),
+        sanitize(data.status_id)
+      ], (err, result) => {
+        if (err) {
+          console.error('🔴 MySQL Insert Error:', err.sqlMessage);
+          return res.status(500).send({ error: err.sqlMessage });
+        }
+        res.send({ message: 'Data inserted successfully' });
+      });
+    }
+  });
+});
+app.post('/api/create-status', (req, res) => {
+  const insertSql = "INSERT INTO Status (status_name) VALUES ('completed')";
+  
+  db.query(insertSql, (err, result) => {
+    if (err) {
+      console.error('Error creating status:', err);
+      return res.status(500).json({ error: err.message });
+    }
+    
+    // In MySQL, the insertId property gives us the ID of the newly inserted row
+    const newStatusId = result.insertId;
+    console.log('Created status with ID:', newStatusId);
+    
+    res.json({ id: newStatusId });
+  });
+});
+
+// ✅ Load Data for a Patient and Date of Service
+app.get('/api/load-dos-details/:patientId/:DOS', (req, res) => {
+  const { patientId, DOS } = req.params;
+  const sql = `SELECT * FROM dos_details WHERE patientId = ? AND DOS = ?`;
+
+  db.query(sql, [patientId, DOS], (err, result) => {
+    if (err) {
+      console.error('🔴 MySQL Error:', err.sqlMessage);
+      return res.status(500).send({ error: err.sqlMessage });
+    }
+    res.send(result.length > 0 ? result[0] : {});
+  });
 });
